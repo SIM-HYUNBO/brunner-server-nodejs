@@ -52,8 +52,8 @@ if(dev) {
   });
 }
 else {
-  var privateKey  = fs.readFileSync('key.pem', 'utf8');
-  var certificate = fs.readFileSync('cert.pem', 'utf8');
+  var privateKey  = fs.readFileSync('cert/key.pem', 'utf8');
+  var certificate = fs.readFileSync('cert/cert.pem', 'utf8');
   var credentials = {key: privateKey, cert: certificate};
   var httpsServer = https.createServer(credentials, server);
 
