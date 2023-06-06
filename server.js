@@ -80,7 +80,6 @@ server.post('/executeJson', async(req, res) => {
   var jResponse=null;
   try{
     jResponse = await executeService("POST", req);
-    res.send(`${JSON.stringify(jResponse)}`);
   }
   catch(e){
     jResponse = `${e}`;
