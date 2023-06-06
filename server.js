@@ -89,11 +89,6 @@ server.post('/executeJson', async(req, res) => {
   }
 });
 
-server.get('*/*', (req, res) => {
-  return handle(req, res);
-});  
-
-
 const executeService = async(method, req)=>{
     var jRequest = method==="GET"? JSON.parse(req.params.requestJson): method==="POST"? req.body: null;
     var jResponse = null;
