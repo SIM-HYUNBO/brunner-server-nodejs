@@ -65,14 +65,29 @@ else {
 
 server.get('/executeJson', async(req, res) => {
   var jResponse=null;
-  jResponse = await executeService("GET", req);
-  res.send(`${JSON.stringify(jResponse)}`);    
+  try{
+    jResponse = await executeService("GET", req);
+  }
+  catch(e){
+    jResponse = `${e}`;
+  }
+  finally {
+    res.send(`${JSON.stringify(jResponse)}`);    
+  }
 });
 
 server.post('/executeJson', async(req, res) => {
   var jResponse=null;
-  jResponse = await executeService("POST", req);
-  res.send(`${JSON.stringify(jResponse)}`);    
+  try{
+    jResponse = await executeService("POST", req);
+    res.send(`${JSON.stringify(jResponse)}`);
+  }
+  catch(e){
+    jResponse = `${e}`;
+  }
+  finally {
+    res.send(`${JSON.stringify(jResponse)}`);    
+  }
 });
 
 server.get('*/*', (req, res) => {
