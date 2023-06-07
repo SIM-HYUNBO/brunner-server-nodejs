@@ -13,10 +13,6 @@ import security from './components/security'
 
 dotenv.config();
 
-const dev = process.env.NODE_ENV !== 'production';
-
-console.log(`NODE_ENV:${process.env.NODE_ENV}`);
-
 const server = express();
 server.use(express.json())
 server.use(cors({
@@ -42,16 +38,16 @@ server.use(rateLimit({
   
 // server.set('trust proxy', 1);
  
-const serverIp= dev ? process.env.BACKEND_SERVER_IP_DEV: process.env.BACKEND_SERVER_IP_PROD;
-const serverPort= dev ? process.env.BACKEND_SERVER_PORT_DEV: process.env.BACKEND_SERVER_PORT_PROD;
+const serverIp= process.env.BACKEND_SERVER_IP;
+const serverPort= process.env.BACKEND_SERVER_PORT;
 
-if(dev) {
+if(process.env.BACKEND_SERVER_PROTOCOL === 'http') {
   server.listen(serverPort, serverIp, (err) => {
     if (err) throw err;
     console.log(`> Ready on http://${serverIp}:${serverPort}`);
   });
 }
-else {
+else if(process.env.BACKEND_SERVER_PROTOCOL === 'https'){
   var privateKey  = fs.readFileSync('cert/key.pem', 'utf8');
   var certificate = fs.readFileSync('cert/cert.pem', 'utf8');
   var credentials = {key: privateKey, cert: certificate};
