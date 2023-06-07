@@ -1,7 +1,5 @@
 `use strict`
 
-import * as mysql from 'mysql2'
-
 export const querySQL = async (promisePool, sql, params)=>{
   try{
     console.log(`

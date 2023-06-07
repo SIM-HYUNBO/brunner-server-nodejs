@@ -1,27 +1,30 @@
 `use strict`
 
+import * as mysql from 'mysql2'
 import * as database from './database/database'
 import * as TB_COR_USER_MST from './database/sqls/TB_COR_USER_MST'
 
 export default function executeService(req, jRequest){
   var jResponse = {};
-  
-  console.log(`
-  host     : ${process.env.DATABASE_SERVER_IP},
-  user     : ${process.env.DATABASE_USER_NAME},
-  password : ${process.env.DATABASE_PASSWORD},
-  database : ${process.env.DATABASE_SCHEMA_NAME}`);
-
-  const pool = mysql.createPool({
-    host     : process.env.DATABASE_SERVER_IP,
-    user     : process.env.DATABASE_USER_NAME,
-    password : process.env.DATABASE_PASSWORD,
-    database : process.env.DATABASE_SCHEMA_NAME
-  });
-  
-  const promisePool = pool.promise();
-
+ 
   try {
+  
+    console.log(`mysql pool info
+---------------------------------
+host     : ${process.env.DATABASE_SERVER_IP},
+user     : ${process.env.DATABASE_USER_NAME},
+password : ${process.env.DATABASE_PASSWORD},
+database : ${process.env.DATABASE_SCHEMA_NAME}`);
+
+    const pool = mysql.createPool({
+      host     : process.env.DATABASE_SERVER_IP,
+      user     : process.env.DATABASE_USER_NAME,
+      password : process.env.DATABASE_PASSWORD,
+      database : process.env.DATABASE_SCHEMA_NAME
+    });
+    
+    const promisePool = pool.promise();
+
     switch(jRequest.commandName){
       case "security.signup":
         jResponse = signup(promisePool, req, jRequest);
