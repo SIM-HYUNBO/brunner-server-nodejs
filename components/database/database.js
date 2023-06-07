@@ -2,23 +2,8 @@
 
 import * as mysql from 'mysql2'
 
-export const querySQL = async (sql, params)=>{
+export const querySQL = async (promisePool, sql, params)=>{
   try{
-    console.log(`
-    host     : ${process.env.DATABASE_SERVER_IP},
-    user     : ${process.env.DATABASE_USER_NAME},
-    password : ${process.env.DATABASE_PASSWORD},
-    database : ${process.env.DATABASE_SCHEMA_NAME}`);
-
-    const pool = mysql.createPool({
-      host     : process.env.DATABASE_SERVER_IP,
-      user     : process.env.DATABASE_USER_NAME,
-      password : process.env.DATABASE_PASSWORD,
-      database : process.env.DATABASE_SCHEMA_NAME
-    });
-    
-    const promisePool = pool.promise();
-
     console.log(`
 ==================================================
 SQL:\n${sql}
@@ -35,7 +20,7 @@ PARAMS:
   }
 };
 
-export const executeSQL = async (sql, params)=>{
+export const executeSQL = async (promisePool, sql, params)=>{
   try{
     console.log(`
 ==================================================

@@ -5,19 +5,35 @@ import * as TB_COR_USER_MST from './database/sqls/TB_COR_USER_MST'
 
 export default function executeService(req, jRequest){
   var jResponse = {};
+  
+  console.log(`
+  host     : ${process.env.DATABASE_SERVER_IP},
+  user     : ${process.env.DATABASE_USER_NAME},
+  password : ${process.env.DATABASE_PASSWORD},
+  database : ${process.env.DATABASE_SCHEMA_NAME}`);
+
+  const pool = mysql.createPool({
+    host     : process.env.DATABASE_SERVER_IP,
+    user     : process.env.DATABASE_USER_NAME,
+    password : process.env.DATABASE_PASSWORD,
+    database : process.env.DATABASE_SCHEMA_NAME
+  });
+  
+  const promisePool = pool.promise();
+
   try {
     switch(jRequest.commandName){
       case "security.signup":
-        jResponse = signup(req, jRequest);
+        jResponse = signup(promisePool, req, jRequest);
           break;
       case "security.signin":
-          jResponse = signin(req, jRequest);
+          jResponse = signin(promisePool, req, jRequest);
           break;
         case "security.signout":
-          jResponse = signout(req, jRequest);
+          jResponse = signout(promisePool, req, jRequest);
             break;
         case "security.resetPassword":
-          jResponse = resetPassword(req, jRequest);
+          jResponse = resetPassword(promisePool, req, jRequest);
             break;
         default:
             break;
@@ -29,7 +45,7 @@ export default function executeService(req, jRequest){
   }
 }
 
-const signup = async (req, jRequest) => {
+const signup = async (promisePool, req, jRequest) => {
   var jResponse = {};
 
   jResponse.commanaName = jRequest.commandName;
@@ -113,11 +129,11 @@ const signup = async (req, jRequest) => {
       return jResponse;
     }
 
-    await database.querySQL(
-      TB_COR_USER_MST.select_DB_COR_USER_MST_01, 
-      [
-        jRequest.userId
-      ]).then((result) => {
+    await database.querySQL(promisePool, 
+                            TB_COR_USER_MST.select_DB_COR_USER_MST_01, 
+                            [
+                              jRequest.userId
+                            ]).then((result) => {
         console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
         
         if(result[0].length > 0) {
@@ -140,24 +156,25 @@ const signup = async (req, jRequest) => {
         return jResponse;
       }
 
-      await database.executeSQL(TB_COR_USER_MST.insert_DB_COR_USER_MST_01, 
-                    [
-                      process.env.DEFAULT_SYSTEM_CODE,
-                      jRequest.userId,
-                      jRequest.password,
-                      jRequest.userName,
-                      process.env.NORMAL_AUTHORITY_GROUP,
-                      jRequest.address,
-                      jRequest.phoneNumber,
-                      jRequest.email,
-                      jRequest.registerNo,
-                      jRequest.registerName,
-                      jRequest.salesType,
-                      jRequest.salesCategory,
-                      'Y',
-                      process.env.SYSTEM_USER_ID
-                    ]).then((result) => {
-          console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
+      await database.executeSQL(promisePool, 
+                                TB_COR_USER_MST.insert_DB_COR_USER_MST_01, 
+                                [
+                                  process.env.DEFAULT_SYSTEM_CODE,
+                                  jRequest.userId,
+                                  jRequest.password,
+                                  jRequest.userName,
+                                  process.env.NORMAL_AUTHORITY_GROUP,
+                                  jRequest.address,
+                                  jRequest.phoneNumber,
+                                  jRequest.email,
+                                  jRequest.registerNo,
+                                  jRequest.registerName,
+                                  jRequest.salesType,
+                                  jRequest.salesCategory,
+                                  'Y',
+                                  process.env.SYSTEM_USER_ID
+                                ]).then((result) => {
+          console.log(`==========================\nRESULT:\n${result}`);
           if(result[0].affectedRows == 1) {
             jResponse.error_code = 0;
             jResponse.error_message = `ok`;
@@ -167,6 +184,7 @@ const signup = async (req, jRequest) => {
             jResponse.error_message = `database failed.`;
           } 
       }).catch((e)=>{
+        console.log(`==========================\nCATCH:\n${e}`);
         jResponse.error_code = -3; // exception
         jResponse.error_message = e;
       }).finally(() => {
@@ -177,7 +195,7 @@ const signup = async (req, jRequest) => {
   return jResponse;
 };
 
-const signin = async (req, jRequest) => {
+const signin = async (promisePool, req, jRequest) => {
     var jResponse = {};
 
     jResponse.commanaName = jRequest.commandName;
@@ -192,10 +210,11 @@ const signin = async (req, jRequest) => {
     } else {
       console.log(`session에 로그인 정보가 없음.`);
 
-      await database.querySQL(TB_COR_USER_MST.select_DB_COR_USER_MST_01, 
-                    [
-                      jRequest.userId
-                    ]).then((result) => {
+      await database.querySQL(promisePool, 
+                              TB_COR_USER_MST.select_DB_COR_USER_MST_01, 
+                              [
+                                jRequest.userId
+                              ]).then((result) => {
           console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
           if(result[0].length == 1) {
             // console.log(`${result[0].PASSWORD},${jRequest.password}`)
@@ -228,7 +247,7 @@ const signin = async (req, jRequest) => {
     return jResponse;
 };
 
-const resetPassword = async (req, jRequest) => {
+const resetPassword = async (promisePool, req, jRequest) => {
   var jResponse = {};
 
   jResponse.commanaName = jRequest.commandName;
@@ -267,15 +286,16 @@ const resetPassword = async (req, jRequest) => {
     return jResponse;
   }
 
-  await database.executeSQL(TB_COR_USER_MST.update_DB_COR_USER_MST_01, 
-                [
-                  jRequest.newPassword, 
-                  jRequest.userId, 
-                  jRequest.registerNo, 
-                  jRequest.phoneNumber, 
-                  jRequest.newPassword
-                ]).then((result) => {
-    console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
+  await database.executeSQL(promisePool, 
+                            TB_COR_USER_MST.update_DB_COR_USER_MST_01, 
+                            [
+                              jRequest.newPassword, 
+                              jRequest.userId, 
+                              jRequest.registerNo, 
+                              jRequest.phoneNumber, 
+                              jRequest.newPassword
+                            ]).then((result) => {
+    console.log(`==========================\nRESULT:\n${result}`);
 
     if(result[0].affectedRows == 1) {
       jResponse = result[0];
@@ -294,7 +314,7 @@ const resetPassword = async (req, jRequest) => {
   return jResponse;
 };
 
-const signout = (req, jRequest) => {
+const signout = (promisePool, req, jRequest) => {
     var jResponse = {};
 
     jResponse.commanaName = jRequest.commandName;
