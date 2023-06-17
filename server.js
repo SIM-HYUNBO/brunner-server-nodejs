@@ -10,7 +10,7 @@ import rateLimit from 'express-rate-limit'
 
 // server's modules.
 import security from './components/security'
-import board from './components/board'
+import talk from './components/talk'
 
 dotenv.config();
 
@@ -96,8 +96,8 @@ const executeService = async(method, req)=>{
     if(commandName.startsWith('security.')){
       jResponse = await security(req, jRequest);
     } 
-    else if(commandName.startsWith('board.')){
-      jResponse = await board(req, jRequest);
+    else if(commandName.startsWith('talk.')){
+      jResponse = await talk(req, jRequest);
     } 
     else {
       jResponse = JSON.stringify(
