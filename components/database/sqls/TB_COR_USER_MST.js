@@ -1,14 +1,14 @@
 `use strict`
 
-export const select_DB_COR_USER_MST_01 = 
+export const select_TB_COR_USER_MST_01 = 
 `SELECT SYSTEM_CODE, USER_ID, PASSWORD, USER_NAME
-  FROM brunner.tb_cor_user_mst
+  FROM BRUNNER.TB_COR_USER_MST
  WHERE USER_ID = ?
  `
  ;
 
- export const update_DB_COR_USER_MST_01 = 
- `UPDATE brunner.tb_cor_user_mst 
+ export const update_TB_COR_USER_MST_01 = 
+ `UPDATE BRUNNER.TB_COR_USER_MST 
      SET PASSWORD = ?
    WHERE USER_ID = ?
      AND REGISTER_NO = ?
@@ -17,8 +17,8 @@ export const select_DB_COR_USER_MST_01 =
    `
   ;
 
-  export const insert_DB_COR_USER_MST_01 = 
-  `INSERT INTO brunner.tb_cor_user_mst
+  export const insert_TB_COR_USER_MST_01 = 
+  `INSERT INTO BRUNNER.TB_COR_USER_MST
     (SYSTEM_CODE, USER_ID, PASSWORD, USER_NAME, AUTHORITY_GROUP_ID, 
      ADDRESS, PHONE_NUMBER, EMAIL_ID, REGISTER_NO, REGISTER_NAME,
      SALES_TYPE, SALES_CATEGORY, USE_FLAG, CREATE_USER_ID, CREATE_TIME, 

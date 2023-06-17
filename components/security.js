@@ -133,7 +133,7 @@ const signup = async (promisePool, req, jRequest) => {
     }
 
     await database.querySQL(promisePool, 
-                            TB_COR_USER_MST.select_DB_COR_USER_MST_01, 
+                            TB_COR_USER_MST.select_TB_COR_USER_MST_01, 
                             [
                               jRequest.userId
                             ]).then((result) => {
@@ -160,7 +160,7 @@ const signup = async (promisePool, req, jRequest) => {
       }
 
       await database.executeSQL(promisePool, 
-                                TB_COR_USER_MST.insert_DB_COR_USER_MST_01, 
+                                TB_COR_USER_MST.insert_TB_COR_USER_MST_01, 
                                 [
                                   process.env.DEFAULT_SYSTEM_CODE,
                                   jRequest.userId,
@@ -214,7 +214,7 @@ const signin = async (promisePool, req, jRequest) => {
       console.log(`session에 로그인 정보가 없음.`);
 
       await database.querySQL(promisePool, 
-                              TB_COR_USER_MST.select_DB_COR_USER_MST_01, 
+                              TB_COR_USER_MST.select_TB_COR_USER_MST_01, 
                               [
                                 jRequest.userId
                               ]).then((result) => {
@@ -290,7 +290,7 @@ const resetPassword = async (promisePool, req, jRequest) => {
   }
 
   await database.executeSQL(promisePool, 
-                            TB_COR_USER_MST.update_DB_COR_USER_MST_01, 
+                            TB_COR_USER_MST.update_TB_COR_USER_MST_01, 
                             [
                               jRequest.newPassword, 
                               jRequest.userId, 

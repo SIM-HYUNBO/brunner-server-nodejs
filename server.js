@@ -10,6 +10,7 @@ import rateLimit from 'express-rate-limit'
 
 // server's modules.
 import security from './components/security'
+import board from './components/board'
 
 dotenv.config();
 
@@ -29,7 +30,7 @@ server.use(session({
 
 // throttling
 server.use(rateLimit({
-  windowMs: 1 * 1 * 60 * 1000, // 24 hrs in milliseconds
+  windowMs: 1 * 1 * 60 * 1000, // 1 minute
   max: 100,
   message: 'You have exceeded the 100 requests in 1 min. limit!', 
   standardHeaders: true,
@@ -95,6 +96,17 @@ const executeService = async(method, req)=>{
     if(commandName.startsWith('security.')){
       jResponse = await security(req, jRequest);
     } 
+    else if(commandName.startsWith('board.')){
+      jResponse = await board(req, jRequest);
+    } 
+    else {
+      jResponse = JSON.stringify(
+        {
+          error_code:-1,
+          error_message:`[${commandName}] not supported function`
+        })
+    } 
+    
     console.log(`reply: ${JSON.stringify(jResponse)}`);
     return jResponse;
 }
