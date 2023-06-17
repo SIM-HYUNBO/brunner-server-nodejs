@@ -26,7 +26,7 @@ database : ${process.env.DATABASE_SCHEMA_NAME}`);
     const promisePool = pool.promise();
 
     switch(jRequest.commandName){
-      case "TA.getTalkItems":
+      case "talk.getTalkItems":
         jResponse = getTalkItems(promisePool, req, jRequest);
           break;
         default:
