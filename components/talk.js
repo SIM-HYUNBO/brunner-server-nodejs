@@ -1,29 +1,13 @@
 `use strict`
 
-import * as mysql from 'mysql2'
 import * as database from './database/database'
 import * as TB_COR_TALK_ITEM_MST from './database/sqls/TB_COR_TALK_ITEM_MST'
 
 export default function executeService(req, jRequest){
   var jResponse = {};
  
-  try {
-  
-    console.log(`mysql pool info
----------------------------------
-host     : ${process.env.DATABASE_SERVER_IP},
-user     : ${process.env.DATABASE_USER_NAME},
-password : ${process.env.DATABASE_PASSWORD},
-database : ${process.env.DATABASE_SCHEMA_NAME}`);
-
-    const pool = mysql.createPool({
-      host     : process.env.DATABASE_SERVER_IP,
-      user     : process.env.DATABASE_USER_NAME,
-      password : process.env.DATABASE_PASSWORD,
-      database : process.env.DATABASE_SCHEMA_NAME
-    });
-    
-    const promisePool = pool.promise();
+  try {    
+    const promisePool = database.getPool().promise();
 
     switch(jRequest.commandName){
       case "talk.getTalkItems":
