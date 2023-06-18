@@ -11,3 +11,14 @@ export const select_TB_COR_TALK_ITEM_MST_01 =
  LIMIT 0,?
  `
  ;
+
+ export const insert_TB_COR_TALK_ITEM_MST_01 = 
+`INSERT INTO BRUNNER.TB_COR_TALK_ITEM_MST
+  (SYSTEM_CODE, TALK_ID, TALK_USER_ID, TALK_TITLE, TALK_CONTENT,
+  TALK_CATEGORY, PARENT_TALK_ID)
+ VALUES (
+  ?, ?, ?, ?, ?, 
+  ?, NULL
+ )
+ `
+ ;

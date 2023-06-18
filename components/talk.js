@@ -115,14 +115,16 @@ const createTalkItem = async (promisePool, req, jRequest) => {
     return jResponse;
   }
 
-
+  const talkId = (new Date()).toISOString().replace(/[^0-9]/g, '').slice(0, -3) + '_' + jRequest.userId;
   await database.querySQL(promisePool, 
-                          TB_COR_TALK_ITEM_MST.select_TB_COR_TALK_ITEM_MST_01, 
+                          TB_COR_TALK_ITEM_MST.insert_TB_COR_TALK_ITEM_MST_01, 
                           [
                             jRequest.systemCode,
-                            jRequest.talkCategory,
-                            jRequest.lastTalkId,
-                            jRequest.pageSize,
+                            talkId,
+                            jRequest.userId,
+                            jRequest.title,
+                            JSON.parse(jRequest.content).blocks[0].text,
+                            jRequest.talkCategory
                           ]).then((result) => {
       console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
       jResponse.error_code = 0; 
