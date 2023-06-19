@@ -63,6 +63,7 @@ else if(process.env.BACKEND_SERVER_PROTOCOL === 'https'){
 server.get('/executeJson', async(req, res) => {
   var jResponse=null;
   try{
+    console.log(`GET data:${req}`);
     jResponse = await executeService("GET", req);
   }
   catch(e){
@@ -76,6 +77,8 @@ server.get('/executeJson', async(req, res) => {
 server.post('/executeJson', async(req, res) => {
   var jResponse=null;
   try{
+    console.log(`POST data:${req}`);
+
     jResponse = await executeService("POST", req);
   }
   catch(e){
