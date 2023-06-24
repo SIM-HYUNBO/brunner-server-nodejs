@@ -209,7 +209,7 @@ const signin = async (promisePool, req, jRequest) => {
               jResponse.error_code = 0;
               jResponse.error_message = `ok`;
               jResponse.userInfo = result[0][0];
-              jResponse.userInfo.password='*';
+              jResponse.userInfo.PASSWORD='*';
               req.session.userInfo = jResponse.userInfo;
               req.session.save(()=> {
                 console.log(`session에 사용자 정보 설정함.`);
