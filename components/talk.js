@@ -2,6 +2,7 @@
 
 import * as database from './database/database'
 import * as TB_COR_TALK_ITEM_MST from './database/sqls/TB_COR_TALK_ITEM_MST'
+import * as TB_COR_TALK_CATEGORY_MST from './database/sqls/TB_COR_TALK_CATEGORY_MST'
 
 export default function executeService(req, jRequest){
   var jResponse = {};
@@ -18,7 +19,10 @@ export default function executeService(req, jRequest){
         break;        
       case "talk.editTalkItem":
         jResponse = editTalkItem(promisePool, req, jRequest);
-        break;        
+        break;
+      case "talk.getUserCategories":
+        jResponse = getUserCategories(promisePool, req, jRequest);
+        break  
       default:
         break;
       }    
@@ -212,5 +216,58 @@ const editTalkItem = async (promisePool, req, jRequest) => {
     //  console.log(jResponse);
   });
 
+  return jResponse;
+};
+
+const getUserCategories = async (promisePool, req, jRequest) => {
+  var jResponse = {};
+
+  jResponse.commanaName = jRequest.commandName;
+  jResponse.userId=jRequest.userId;
+  jResponse.password=jRequest.password;
+
+  console.log(`session info ${JSON.stringify(req.session)}`);
+
+  if(typeof jRequest.systemCode == "undefined" || jRequest.systemCode === ''){
+    jResponse.error_code = -2;
+    jResponse.error_message = `the systemCode field value is missing.`;
+    return jResponse;
+  }
+
+  if(typeof jRequest.userId == "undefined" || jRequest.userId == "undefined" || jRequest.userId === ''){
+    await database.querySQL(promisePool, 
+      TB_COR_TALK_CATEGORY_MST.select_TB_COR_TALK_CATEGORY_MST_01, 
+      [
+        jRequest.systemCode
+      ]).then((result) => {
+        console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
+        jResponse.error_code = 0; 
+        jResponse.error_message = ``;
+        jResponse.categories = result[0];
+      }).catch((e)=>{
+        jResponse.error_code = -3; // exception
+        jResponse.error_message = e;
+      }).finally(() => {
+      // console.log(jResponse);
+      });
+  } else {
+    await database.querySQL(promisePool, 
+      TB_COR_TALK_CATEGORY_MST.select_TB_COR_TALK_CATEGORY_MST_02, 
+      [
+        jRequest.systemCode,
+        jRequest.userId + '_%'
+      ]).then((result) => {
+        console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
+        jResponse.error_code = 0; 
+        jResponse.error_message = ``;
+        jResponse.categories = result[0];
+      }).catch((e)=>{
+        jResponse.error_code = -3; // exception
+        jResponse.error_message = e;
+      }).finally(() => {
+      // console.log(jResponse);
+      });
+  }
+  
   return jResponse;
 };
