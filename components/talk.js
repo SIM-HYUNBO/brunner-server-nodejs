@@ -234,7 +234,9 @@ const getUserCategories = async (promisePool, req, jRequest) => {
     return jResponse;
   }
 
-  if(typeof jRequest.userId == "undefined" || jRequest.userId == "undefined" || jRequest.userId === ''){
+  if(typeof jRequest.userId == "undefined" || 
+     jRequest.userId == "undefined" || 
+     jRequest.userId === ''){
     await database.querySQL(promisePool, 
       TB_COR_TALK_CATEGORY_MST.select_TB_COR_TALK_CATEGORY_MST_01, 
       [
@@ -243,7 +245,8 @@ const getUserCategories = async (promisePool, req, jRequest) => {
         console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
         jResponse.error_code = 0; 
         jResponse.error_message = ``;
-        jResponse.categories = result[0];
+        jResponse.others_categories = result[0];
+        jResponse.users_categories = [];
       }).catch((e)=>{
         jResponse.error_code = -3; // exception
         jResponse.error_message = e;
@@ -260,13 +263,30 @@ const getUserCategories = async (promisePool, req, jRequest) => {
         console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
         jResponse.error_code = 0; 
         jResponse.error_message = ``;
-        jResponse.categories = result[0];
+        jResponse.users_categories = result[0];
       }).catch((e)=>{
         jResponse.error_code = -3; // exception
         jResponse.error_message = e;
       }).finally(() => {
       // console.log(jResponse);
       });
+
+      await database.querySQL(promisePool, 
+        TB_COR_TALK_CATEGORY_MST.select_TB_COR_TALK_CATEGORY_MST_03, 
+        [
+          jRequest.systemCode,
+          jRequest.userId + '_%'
+        ]).then((result) => {
+          console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
+          jResponse.error_code = 0; 
+          jResponse.error_message = ``;
+          jResponse.others_categories = result[0];
+        }).catch((e)=>{
+          jResponse.error_code = -3; // exception
+          jResponse.error_message = e;
+        }).finally(() => {
+        // console.log(jResponse);
+        });  
   }
   
   return jResponse;
