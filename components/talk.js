@@ -23,6 +23,9 @@ export default function executeService(req, jRequest){
       case "talk.getUserCategories":
         jResponse = getUserCategories(promisePool, req, jRequest);
         break  
+      case "talk.createTalkCategory":
+        jResponse = createTalkCategory(promisePool, req, jRequest);
+        break  
       default:
         break;
       }    
@@ -78,7 +81,7 @@ const getTalkItems = async (promisePool, req, jRequest) => {
         console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
         jResponse.error_code = 0; 
         jResponse.error_message = ``;
-        jResponse.talkItems = result[0];
+        jResponse.result = result[0];
   }).catch((e)=>{
       jResponse.error_code = -3; // exception
       jResponse.error_message = e;
@@ -139,7 +142,7 @@ const createTalkItem = async (promisePool, req, jRequest) => {
       console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
       jResponse.error_code = 0; 
       jResponse.error_message = ``;
-      jResponse.talkItems = result[0];
+      jResponse.result = result[0];
 }).catch((e)=>{
     jResponse.error_code = -3; // exception
     jResponse.error_message = e;
@@ -158,32 +161,42 @@ const editTalkItem = async (promisePool, req, jRequest) => {
  
   console.log(`session info ${JSON.stringify(req.session)}`);
 
-  if(typeof jRequest.systemCode == "undefined" || jRequest.systemCode === ''){
+  if(typeof jRequest.systemCode == "undefined" || 
+     jRequest.systemCode == "undefined" || 
+     jRequest.systemCode === ''){
     jResponse.error_code = -2;
     jResponse.error_message = `the systemCode field value is missing.`;
     return jResponse;
   }
 
-  if(typeof jRequest.talkCategory == "undefined" || jRequest.talkCategory === ''){
+  if(typeof jRequest.talkCategory == "undefined" || 
+     jRequest.talkCategory == "undefined" || 
+     jRequest.talkCategory === ''){
     jResponse.error_code = -2;
     jResponse.error_message = `the talkCategory field value is missing.`;
     return jResponse;
   }
 
-  if(typeof jRequest.title == "undefined" || jRequest.title === ''){
+  if(typeof jRequest.title == "undefined" || 
+     jRequest.title == "undefined" ||
+     jRequest.title === ''){
     jResponse.error_code = -2;
     jResponse.error_message = `the title field value is missing.`;
     return jResponse;
   }
 
 
-  if(typeof jRequest.content == "undefined" || jRequest.content === ''){
+  if(typeof jRequest.content == "undefined" || 
+     jRequest.content == "undefined" ||
+     jRequest.content === ''){
     jResponse.error_code = -2;
     jResponse.error_message = `the content field value is missing.`;
     return jResponse;
   }
 
-  if(typeof jRequest.talkId == "undefined" || jRequest.talkId === ''){
+  if(typeof jRequest.talkId == "undefined" || 
+     jRequest.talkId == "undefined" ||  
+     jRequest.talkId === ''){
     jResponse.error_code = -2;
     jResponse.error_message = `the talkId field value is missing.`;
     return jResponse;
@@ -208,7 +221,7 @@ const editTalkItem = async (promisePool, req, jRequest) => {
       console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
       jResponse.error_code = 0; 
       jResponse.error_message = ``;
-      jResponse.talkItems = result[0];
+      jResponse.result = result[0];
 }).catch((e)=>{
     jResponse.error_code = -3; // exception
     jResponse.error_message = e;
@@ -289,5 +302,59 @@ const getUserCategories = async (promisePool, req, jRequest) => {
         });  
   }
   
+  return jResponse;
+};
+
+const createTalkCategory = async (promisePool, req, jRequest) => {
+  var jResponse = {};
+
+  jResponse.commanaName = jRequest.commandName;
+  jResponse.userId=jRequest.userId;
+ 
+  console.log(`session info ${JSON.stringify(req.session)}`);
+
+  if(typeof jRequest.systemCode == "undefined" ||
+     jRequest.systemCode == "undefined" || 
+     jRequest.systemCode === ''){
+    jResponse.error_code = -2;
+    jResponse.error_message = `the systemCode field value is missing.`;
+    return jResponse;
+  }
+
+  if(typeof jRequest.userId == "undefined" || 
+     jRequest.userId == "undefined" ||
+     jRequest.userId === ''){
+    jResponse.error_code = -2;
+    jResponse.error_message = `the userId field value is missing.`;
+    return jResponse;
+  }
+
+  if(typeof jRequest.categoryName == "undefined" || 
+     jRequest.categoryName === '' ||
+     jRequest.categoryName == "undefined" ){
+    jResponse.error_code = -2;
+    jResponse.error_message = `the categoryName field value is missing.`;
+    return jResponse;
+  }
+
+   await database.executeSQL(promisePool, 
+                          TB_COR_TALK_CATEGORY_MST.insert_TB_COR_TALK_CATEGORY_MST_01, 
+                          [
+                            jRequest.systemCode,
+                            `${jRequest.userId}_${jRequest.categoryName}`,
+                            jRequest.categoryName,
+                            jRequest.userId
+                          ]).then((result) => {
+      console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
+      jResponse.error_code = 0; 
+      jResponse.error_message = ``;
+      jResponse.result = result[0];
+}).catch((e)=>{
+    jResponse.error_code = -3; // exception
+    jResponse.error_message = e;
+  }).finally(() => {
+    //  console.log(jResponse);
+  });
+
   return jResponse;
 };
