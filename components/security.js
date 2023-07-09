@@ -110,11 +110,6 @@ const signup = async (promisePool, req, jRequest) => {
       jResponse.error_message = `[address] is missing.`;
       return jResponse;
     }
-    if (typeof jRequest.registerName == "undefined" || jRequest.registerName.trim() == ``) {
-      jResponse.error_code = -2; // incorrect user info 
-      jResponse.error_message = `[registerName] is missing.`;
-      return jResponse;
-    }
 
     await database.querySQL(promisePool,
       TB_COR_USER_MST.select_TB_COR_USER_MST_01,
