@@ -3,6 +3,7 @@
 import * as database from './database/database'
 import * as TB_COR_TALK_ITEM_MST from './database/sqls/TB_COR_TALK_ITEM_MST'
 import * as TB_COR_TALK_MST from './database/sqls/TB_COR_TALK_MST'
+import createPush from './push'
 
 export default function executeService(req, jRequest) {
   var jResponse = {};
@@ -97,7 +98,7 @@ const createTalkItem = async (promisePool, req, jRequest) => {
   var jResponse = {};
 
   jResponse.commanaName = jRequest.commandName;
-  jResponse.userId = jRequest.userId;
+  jResponse.userId = jRequest.talkItemUserId;
 
   console.log(`session info ${JSON.stringify(req.session)}`);
 
@@ -113,20 +114,20 @@ const createTalkItem = async (promisePool, req, jRequest) => {
     return jResponse;
   }
 
-  if (typeof jRequest.title == "undefined" || jRequest.title === '') {
+  if (typeof jRequest.talkItemTitle == "undefined" || jRequest.talkItemTitle === '') {
     jResponse.error_code = -2;
     jResponse.error_message = `the title field value is missing.`;
     return jResponse;
   }
 
 
-  if (typeof jRequest.content == "undefined" || jRequest.content === '') {
+  if (typeof jRequest.talkItemContent == "undefined" || jRequest.talkItemContent === '') {
     jResponse.error_code = -2;
     jResponse.error_message = `the content field value is missing.`;
     return jResponse;
   }
 
-  const talkId = (new Date()).toISOString().replace(/[^0-9]/g, '').slice(0, -3) + '_' + jRequest.userId;
+  const talkItemId = (new Date()).toISOString().replace(/[^0-9]/g, '').slice(0, -3) + '_' + jRequest.talkItemUserId;
   // console.log();
   // const content = jRequest.content.join("\n");
   // console.log(content);
@@ -134,10 +135,10 @@ const createTalkItem = async (promisePool, req, jRequest) => {
     TB_COR_TALK_ITEM_MST.insert_TB_COR_TALK_ITEM_MST_01,
     [
       jRequest.systemCode,
-      talkId,
-      jRequest.userId,
-      jRequest.title,
-      JSON.stringify(jRequest.content),
+      talkItemId,
+      jRequest.talkItemUserId,
+      jRequest.talkItemTitle,
+      JSON.stringify(jRequest.talkItemContent),
       jRequest.talkId
     ]).then((result) => {
       console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
@@ -149,6 +150,7 @@ const createTalkItem = async (promisePool, req, jRequest) => {
       jResponse.error_message = e;
     }).finally(() => {
       //  console.log(jResponse);
+      checkCreatePush(talkItemId);
     });
 
   return jResponse;
@@ -158,7 +160,7 @@ const editTalkItem = async (promisePool, req, jRequest) => {
   var jResponse = {};
 
   jResponse.commanaName = jRequest.commandName;
-  jResponse.userId = jRequest.userId;
+  jResponse.userId = jRequest.talkItemUserId;
 
   console.log(`session info ${JSON.stringify(req.session)}`);
 
@@ -180,19 +182,18 @@ const editTalkItem = async (promisePool, req, jRequest) => {
     return jResponse;
   }
 
-  if (typeof jRequest.title == "undefined" ||
-    jRequest.title == "undefined" ||
-    jRequest.title === '') {
+  if (typeof jRequest.talkItemTitle == "undefined" ||
+    jRequest.talkItemTitle == "undefined" ||
+    jRequest.talkItemTitle === '') {
     jResponse.error_code = -2;
     jResponse.error_message = `the title field value is missing.`;
     console.log(jResponse.error_message);
     return jResponse;
   }
 
-
-  if (typeof jRequest.content == "undefined" ||
-    jRequest.content == "undefined" ||
-    jRequest.content === '') {
+  if (typeof jRequest.talkItemContent == "undefined" ||
+    jRequest.talkItemContent == "undefined" ||
+    jRequest.talkItemContent === '') {
     jResponse.error_code = -2;
     jResponse.error_message = `the content field value is missing.`;
     console.log(jResponse.error_message);
@@ -208,7 +209,7 @@ const editTalkItem = async (promisePool, req, jRequest) => {
     return jResponse;
   }
 
-  if (jRequest.talkItemId.endsWith(`_${jRequest.userId}`) == false) {
+  if (jRequest.talkItemId.endsWith(`_${jRequest.talkItemUserId}`) == false) {
     jResponse.error_code = -4;
     jResponse.error_message = "Editing this talk is not permitted.";
     console.log(jResponse.error_message);
@@ -218,8 +219,8 @@ const editTalkItem = async (promisePool, req, jRequest) => {
   await database.executeSQL(promisePool,
     TB_COR_TALK_ITEM_MST.update_TB_COR_TALK_ITEM_MST_01,
     [
-      jRequest.title,
-      JSON.stringify(jRequest.content),
+      jRequest.talkItemTitle,
+      JSON.stringify(jRequest.talkItemContent),
       jRequest.systemCode,
       jRequest.talkItemId
     ]).then((result) => {
@@ -232,6 +233,7 @@ const editTalkItem = async (promisePool, req, jRequest) => {
       jResponse.error_message = e;
     }).finally(() => {
       //  console.log(jResponse);
+      checkCreatePush(jRequest.talkItemId);
     });
 
   return jResponse;
@@ -363,3 +365,14 @@ const createTalk = async (promisePool, req, jRequest) => {
 
   return jResponse;
 };
+
+const checkCreatePush = (talkItemId) => {
+  const pushType = 'TALK_ITEM';
+  const toUserIds = [];
+  const jPushItem = {};
+
+  jPushItem.talkItemId = talkItemId;
+
+  // createPush(pushType, toUserIds, jPushItem);
+  console.log('check push alarm called')
+}

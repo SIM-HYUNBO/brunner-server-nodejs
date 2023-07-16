@@ -1,0 +1,11 @@
+`use strict`
+
+export const insert_TB_COR_NOTIFICATION_ITEM_01 =
+  `INSERT INTO BRUNNER.TB_COR_NOTIFICATION_ITEM
+  (SYSTEM_CODE, TO_USER_ID, PUSH_TYPE, PUSH_TIME, FROM_SOURCE, CONTENT)
+ VALUES (
+  ?, ?, ?, ?, ?, ?
+ )
+ `
+  ;
+
