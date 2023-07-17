@@ -3,7 +3,8 @@
 import * as database from './database/database'
 import * as TB_COR_TALK_ITEM_MST from './database/sqls/TB_COR_TALK_ITEM_MST'
 import * as TB_COR_TALK_MST from './database/sqls/TB_COR_TALK_MST'
-import createPush from './push'
+import createPush from './push-notification'
+import createPushNotification from './push-notification'
 
 export default function executeService(req, jRequest) {
   var jResponse = {};
@@ -150,7 +151,7 @@ const createTalkItem = async (promisePool, req, jRequest) => {
       jResponse.error_message = e;
     }).finally(() => {
       //  console.log(jResponse);
-      checkCreatePush(talkItemId);
+      checkCreatePushNotification(jRequest.systemCode, talkItemId);
     });
 
   return jResponse;
@@ -233,7 +234,7 @@ const editTalkItem = async (promisePool, req, jRequest) => {
       jResponse.error_message = e;
     }).finally(() => {
       //  console.log(jResponse);
-      checkCreatePush(jRequest.talkItemId);
+      checkCreatePushNotification(jRequest.systemCode, jRequest.talkItemId);
     });
 
   return jResponse;
@@ -366,13 +367,13 @@ const createTalk = async (promisePool, req, jRequest) => {
   return jResponse;
 };
 
-const checkCreatePush = (talkItemId) => {
-  const pushType = 'TALK_ITEM';
-  const toUserIds = [];
+const checkCreatePushNotification = (systemCode, talkItemId) => {
+  // 본인 자신을 제외하고 인자로 넘어온 talkItemId의 메인 talkId에 참여한 사람 모두 (작성자 포함)
+
   const jPushItem = {};
+  jPushItem.systemCode = systemCode;
+  jPushItem.pushType = 'TALK_ITEM';
+  jPushItem.fromSource = talkItemId
 
-  jPushItem.talkItemId = talkItemId;
-
-  // createPush(pushType, toUserIds, jPushItem);
-  console.log('check push alarm called')
+  createPushNotification(database.getPool().promise(), jPushItem);
 }
