@@ -19,7 +19,6 @@ export default async function createPushNotification(promisePool, jPushItem) {
 
     if (jPushItem.pushType == 'TALK_ITEM') {
         const systemCode = jPushItem.systemCode;
-        const fromTalkItemIOd = jPushItem.fromSource;
         const toUserIds = jPushItem.toUserIds;
 
         await database.executeSQL(promisePool,
