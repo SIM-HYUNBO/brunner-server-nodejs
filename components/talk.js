@@ -152,7 +152,7 @@ const createTalkItem = async (promisePool, req, jRequest) => {
       jResponse.error_message = e;
     }).finally(() => {
       //  console.log(jResponse);
-      checkCreatePushNotification(promisePool, jRequest.systemCode, talkItemId);
+      checkPushNotification(promisePool, jRequest.systemCode, talkItemId);
     });
 
   return jResponse;
@@ -235,7 +235,7 @@ const editTalkItem = async (promisePool, req, jRequest) => {
       jResponse.error_message = e;
     }).finally(() => {
       //  console.log(jResponse);
-      checkCreatePushNotification(promisePool, jRequest.systemCode, jRequest.talkItemId);
+      checkPushNotification(promisePool, jRequest.systemCode, jRequest.talkItemId);
     });
 
   return jResponse;
@@ -368,7 +368,7 @@ const createTalk = async (promisePool, req, jRequest) => {
   return jResponse;
 };
 
-const checkCreatePushNotification = async (promisePool, systemCode, talkItemId) => {
+const checkPushNotification = async (promisePool, systemCode, talkItemId) => {
   // 본인 자신을 제외하고 인자로 넘어온 talkItemId의 메인 talkId에 참여한 사람 모두 (작성자 포함)
 
   const jPushItem = {};
