@@ -1,9 +1,11 @@
 `use strict`
 
 import * as database from './database/database'
-import * as TB_COR_NOTIFICATION_ITEM from './database/sqls/TB_COR_NOTIFICATION_ITEM'
 import admin from "firebase-admin";
 import serviceAccount from "./notification/brunner-push-7e0ef-firebase-adminsdk-ptyec-3892a26b45.json";
+
+import * as TB_COR_NOTIFICATION_ITEM from './database/sqls/TB_COR_NOTIFICATION_ITEM'
+import * as TB_COR_USER_MST from './database/sqls/TB_COR_USER_MST'
 
 /* 사용자에게 푸시 알람을 생성함
 1. 신규 대화항목를 만들었거나 기존 대화항목을 편집했을때 
@@ -29,7 +31,7 @@ export default async function createPushNotification(promisePool, jPushItem) {
                 fromSource
             ]).then((result) => {
                 console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
-                pushMessage('title', 'body', 'topic');
+                pushMessage(promisePool, toUserIds, 'title', 'body', 'topic');
             }).catch((e) => {
                 console.log(e)
             }).finally(() => {
@@ -44,7 +46,7 @@ export default async function createPushNotification(promisePool, jPushItem) {
     }
 }
 
-const pushMessage = (title, body, topic) => {
+const pushMessage = async (promisePool, toUserIds, title, body, topic) => {
     if (initialized == false) {
         admin.initializeApp({
             credential: admin.credential.cert(serviceAccount),
@@ -52,19 +54,39 @@ const pushMessage = (title, body, topic) => {
         initialized = true;
     }
 
-    const messaging = admin.messaging()
-    var payload = {
-        notification: {
-            title: `${title}`,
-            body: `${body}`
-        },
-        // topic: `/topics/all`,
-        token: 'cBc9Y9R-RvNjhjiOVQTgTs:APA91bEsD4z0Gpkre5t0B4mtgRH56kKYWg0Go5VcS3nTJrCLihA0EoQqjYu5WN1gl9DPczexm2x92q0yXq17XYX9j6GCLFvbrXe66wVXKdXbm9NxVZ5CA3_2xvo_jLoE-TwQ-tPYqtws',
-        // condition: ''
-    };
+    const messaging = admin.messaging();
+    let userTokens = [];
 
-    messaging.send(payload)
-        .then((result) => {
-            console.log(result)
-        })
+    let result = await database.querySQL(promisePool,
+        TB_COR_USER_MST.select_TB_COR_USER_MST_02,
+        [
+            toUserIds
+        ]);
+
+    console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
+
+    userTokens = result[0].map((token) => {
+        return token.USER_TOKEN ? token.USER_TOKEN : '';
+    });
+
+    if (userTokens.length > 0) {
+        var payload = {
+            notification: {
+                title: `${title}`,
+                body: `${body}`
+            },
+            // topic: `/topics/all`,
+            token: userTokens.join(','),
+            // condition: ''
+        };
+
+        messaging.send(payload)
+            .then((result) => {
+                console.log(result)
+            }).catch((e) => {
+                console.log(e)
+            }).finally(() => {
+                //  console.log(jResponse);
+            });
+    }
 }

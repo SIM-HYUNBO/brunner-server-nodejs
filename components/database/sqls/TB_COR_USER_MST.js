@@ -7,6 +7,13 @@ export const select_TB_COR_USER_MST_01 =
  `
   ;
 
+export const select_TB_COR_USER_MST_02 =
+  `SELECT USER_TOKEN
+  FROM BRUNNER.TB_COR_USER_MST
+ WHERE USER_ID IN (?)
+ `
+  ;
+
 export const update_TB_COR_USER_MST_01 =
   `UPDATE BRUNNER.TB_COR_USER_MST 
      SET PASSWORD = ?
@@ -14,6 +21,13 @@ export const update_TB_COR_USER_MST_01 =
      AND REGISTER_NO = ?
      AND PHONE_NUMBER = ?
      AND PASSWORD != ?
+   `
+  ;
+
+export const update_TB_COR_USER_MST_02 =
+  `UPDATE BRUNNER.TB_COR_USER_MST 
+     SET USER_TOKEN = ?
+   WHERE USER_ID = ?
    `
   ;
 

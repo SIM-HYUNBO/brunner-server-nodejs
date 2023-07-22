@@ -16,6 +16,9 @@ export default function executeService(req, jRequest) {
       case "security.signin":
         jResponse = signin(promisePool, req, jRequest);
         break;
+      case "security.updateUserToken":
+        jResponse = updateUserToken(promisePool, req, jRequest);
+        break;
       case "security.signout":
         jResponse = signout(promisePool, req, jRequest);
         break;
@@ -221,6 +224,40 @@ const signin = async (promisePool, req, jRequest) => {
         // console.log(jResponse);
       });
   }
+
+  return jResponse;
+};
+
+const updateUserToken = async (promisePool, req, jRequest) => {
+  var jResponse = {};
+
+  jResponse.commanaName = jRequest.commandName;
+  jResponse.userId = jRequest.userId;
+
+  console.log(`session info ${JSON.stringify(req.session)}`);
+
+
+  await database.executeSQL(promisePool,
+    TB_COR_USER_MST.update_TB_COR_USER_MST_02,
+    [
+      jRequest.userToken,
+      jRequest.userId
+    ]).then((result) => {
+      console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
+      if (result[0].affectedRows == 1) {
+        jResponse = result[0];
+        jResponse.error_code = 0;
+        jResponse.error_message = ``;
+      } else {
+        jResponse.error_code = -2;
+        jResponse.error_message = `database error occured.`;
+      }
+    }).catch((e) => {
+      jResponse.error_code = -2; // exception
+      jResponse.error_message = e;
+    }).finally(() => {
+      // console.log(jResponse);
+    });
 
   return jResponse;
 };

@@ -2,6 +2,7 @@
 
 import * as database from './database/database'
 import * as TB_COR_TALK_ITEM_MST from './database/sqls/TB_COR_TALK_ITEM_MST'
+import * as TB_COR_USER_MST from './database/sqls/TB_COR_USER_MST'
 import * as TB_COR_TALK_MST from './database/sqls/TB_COR_TALK_MST'
 import createPush from './push-notification'
 import createPushNotification from './push-notification'
@@ -151,7 +152,7 @@ const createTalkItem = async (promisePool, req, jRequest) => {
       jResponse.error_message = e;
     }).finally(() => {
       //  console.log(jResponse);
-      checkCreatePushNotification(jRequest.systemCode, talkItemId);
+      checkCreatePushNotification(promisePool, jRequest.systemCode, talkItemId);
     });
 
   return jResponse;
@@ -234,7 +235,7 @@ const editTalkItem = async (promisePool, req, jRequest) => {
       jResponse.error_message = e;
     }).finally(() => {
       //  console.log(jResponse);
-      checkCreatePushNotification(jRequest.systemCode, jRequest.talkItemId);
+      checkCreatePushNotification(promisePool, jRequest.systemCode, jRequest.talkItemId);
     });
 
   return jResponse;
@@ -367,13 +368,36 @@ const createTalk = async (promisePool, req, jRequest) => {
   return jResponse;
 };
 
-const checkCreatePushNotification = (systemCode, talkItemId) => {
+const checkCreatePushNotification = async (promisePool, systemCode, talkItemId) => {
   // 본인 자신을 제외하고 인자로 넘어온 talkItemId의 메인 talkId에 참여한 사람 모두 (작성자 포함)
 
   const jPushItem = {};
   jPushItem.systemCode = systemCode;
   jPushItem.pushType = 'TALK_ITEM';
-  jPushItem.fromSource = talkItemId
+  jPushItem.fromSource = talkItemId;
+  jPushItem.toUserIds = await getToUserIds(promisePool, systemCode, talkItemId);
+  if (jPushItem.toUserIds.length > 0)
+    createPushNotification(promisePool, jPushItem);
+};
 
-  createPushNotification(database.getPool().promise(), jPushItem);
+const getToUserIds = async (promisePool, systemCode, talkItemId) => {
+  // talkItemId가 생성 또는 수정되었을때 push  메시지를 전송해야 하는 사용자의 목록을 조회
+
+  let result = await database.querySQL(promisePool,
+    TB_COR_TALK_ITEM_MST.select_TB_COR_TALK_ITEM_MST_02,
+    [
+      systemCode,
+      talkItemId,
+      systemCode,
+      talkItemId
+    ]);
+  if (result[0].length >= 0) {
+    // console.log(`${result[0].PASSWORD},${jRequest.password}`)
+    let newArr = result[0].map(function add(item) {
+      return item.TO_USER_ID;
+    });
+    return newArr;
+  } else {
+    return [];
+  }
 }
