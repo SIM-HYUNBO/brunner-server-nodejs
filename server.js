@@ -61,6 +61,8 @@ else if (process.env.BACKEND_SERVER_PROTOCOL === 'https') {
 }
 
 server.get('/executeJson', async (req, res) => {
+  let txnTime = process.hrtime()
+  console.log(`\n>>>>>>>>>>\nSTART TXN:${txnTime}\n`)
   var jResponse = null;
   try {
     console.log(`GET data:${req}`);
@@ -71,10 +73,13 @@ server.get('/executeJson', async (req, res) => {
   }
   finally {
     res.send(`${JSON.stringify(jResponse)}`);
+    console.log(`\nEND TXN:${txnTime}\n<<<<<<<<<<<<<<<<<<<<<<<<<\n`)
   }
 });
 
 server.post('/executeJson', async (req, res) => {
+  let txnTime = process.hrtime()
+  console.log(`\n>>>>>>>>>>>>>>>>>>>>>>>>>\nSTART TXN:${txnTime}\n`)
   var jResponse = null;
   try {
     jResponse = await executeService("POST", req);
@@ -84,6 +89,7 @@ server.post('/executeJson', async (req, res) => {
   }
   finally {
     res.send(`${JSON.stringify(jResponse)}`);
+    console.log(`\nEND TXN:${txnTime}\n<<<<<<<<<<<<<<<<<<<<<<<<<\n`)
   }
 });
 
