@@ -53,7 +53,7 @@ const signup = async (promisePool, req, jRequest) => {
 
     return jResponse;
   } else {
-    if (typeof jRequest.userId == "undefined" || jRequest.userId.trim() == ``) {
+    if (!jRequest.userId) {
       jResponse.error_code = -2;
       jResponse.error_message = `[userId] is missing.`;
       return jResponse;
@@ -63,7 +63,7 @@ const signup = async (promisePool, req, jRequest) => {
       jResponse.error_message = `[userId] length should be from 5 to 10.`;
       return jResponse;
     }
-    if (typeof jRequest.password == "undefined" || jRequest.password.trim() == ``) {
+    if (!jRequest.password) {
       jResponse.error_code = -2;
       jResponse.error_message = `[password] is missing.`;
       return jResponse;
@@ -73,7 +73,7 @@ const signup = async (promisePool, req, jRequest) => {
       jResponse.error_message = `[password] length should be from 5 to 10.`;
       return jResponse;
     }
-    if (typeof jRequest.userName == "undefined" || jRequest.userName.trim() == ``) {
+    if (!jRequest.userName) {
       jResponse.error_code = -2;
       jResponse.error_message = `[userName] is missing.`;
       return jResponse;
@@ -83,7 +83,7 @@ const signup = async (promisePool, req, jRequest) => {
       jResponse.error_message = `[password] length should be from 2 to 10.`;
       return jResponse;
     }
-    if (typeof jRequest.phoneNumber == "undefined" || jRequest.phoneNumber.trim() == ``) {
+    if (!jRequest.phoneNumber) {
       jResponse.error_code = -2;
       jResponse.error_message = `[phoneNumber] is missing.`;
       return jResponse;
@@ -93,7 +93,7 @@ const signup = async (promisePool, req, jRequest) => {
       jResponse.error_message = `[phoneNumber] is not valid.`;
       return jResponse;
     }
-    if (typeof jRequest.email == "undefined" || jRequest.email.trim() == ``) {
+    if (!jRequest.email) {
       jResponse.error_code = -2;
       jResponse.error_message = `[email] is missing.`;
       return jResponse;
@@ -103,12 +103,12 @@ const signup = async (promisePool, req, jRequest) => {
       jResponse.error_message = `[email] is not valid.`;
       return jResponse;
     }
-    if (typeof jRequest.registerNo == "undefined" || jRequest.registerNo.trim() == ``) {
+    if (!jRequest.registerNo) {
       jResponse.error_code = -2; // incorrect user info 
       jResponse.error_message = `[registerNo] is missing.`;
       return jResponse;
     }
-    if (typeof jRequest.address == "undefined" || jRequest.address.trim() == ``) {
+    if (!jRequest.address) {
       jResponse.error_code = -2; // incorrect user info 
       jResponse.error_message = `[address] is missing.`;
       return jResponse;

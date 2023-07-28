@@ -49,25 +49,25 @@ const getTalkItems = async (promisePool, req, jRequest) => {
 
   console.log(`session info ${JSON.stringify(req.session)}`);
 
-  if (typeof jRequest.systemCode == "undefined" || jRequest.systemCode === '') {
+  if (!jRequest.systemCode) {
     jResponse.error_code = -2;
     jResponse.error_message = `the systemCode field value is missing.`;
     return jResponse;
   }
 
-  if (typeof jRequest.talkId == "undefined" || jRequest.talkId === '') {
+  if (!jRequest.talkId) {
     jResponse.error_code = -2;
     jResponse.error_message = `the talkId field value is missing.`;
     return jResponse;
   }
 
-  if (typeof jRequest.lastTalkItemId == "undefined" || jRequest.lastTalkItemId === '') {
+  if (!jRequest.lastTalkItemId) {
     jResponse.error_code = -2;
     jResponse.error_message = `the talkItemId field value is missing.`;
     return jResponse;
   }
 
-  if (typeof jRequest.pageSize == "undefined") {
+  if (!jRequest.pageSize) {
     jResponse.error_code = -2;
     jResponse.error_message = `the pageSize field value is missing.`;
     return jResponse;
@@ -104,26 +104,26 @@ const createTalkItem = async (promisePool, req, jRequest) => {
 
   console.log(`session info ${JSON.stringify(req.session)}`);
 
-  if (typeof jRequest.systemCode == "undefined" || jRequest.systemCode === '') {
+  if (!jRequest.systemCode) {
     jResponse.error_code = -2;
     jResponse.error_message = `the systemCode field value is missing.`;
     return jResponse;
   }
 
-  if (typeof jRequest.talkId == "undefined" || jRequest.talkId === '') {
+  if (!jRequest.talkId) {
     jResponse.error_code = -2;
     jResponse.error_message = `the talkId field value is missing.`;
     return jResponse;
   }
 
-  if (typeof jRequest.talkItemTitle == "undefined" || jRequest.talkItemTitle === '') {
+  if (!jRequest.talkItemTitle) {
     jResponse.error_code = -2;
     jResponse.error_message = `the title field value is missing.`;
     return jResponse;
   }
 
 
-  if (typeof jRequest.talkItemContent == "undefined" || jRequest.talkItemContent === '') {
+  if (!jRequest.talkItemContent) {
     jResponse.error_code = -2;
     jResponse.error_message = `the content field value is missing.`;
     return jResponse;
@@ -166,45 +166,35 @@ const editTalkItem = async (promisePool, req, jRequest) => {
 
   console.log(`session info ${JSON.stringify(req.session)}`);
 
-  if (typeof jRequest.systemCode == "undefined" ||
-    jRequest.systemCode == "undefined" ||
-    jRequest.systemCode === '') {
+  if (!jRequest.systemCode) {
     jResponse.error_code = -2;
     jResponse.error_message = `the systemCode field value is missing.`;
     console.log(jResponse.error_message);
     return jResponse;
   }
 
-  if (typeof jRequest.talkItemId == "undefined" ||
-    jRequest.talkItemId == "undefined" ||
-    jRequest.talkItemId === '') {
+  if (!jRequest.talkItemId) {
     jResponse.error_code = -2;
     jResponse.error_message = `the talkId field value is missing.`;
     console.log(jResponse.error_message);
     return jResponse;
   }
 
-  if (typeof jRequest.talkItemTitle == "undefined" ||
-    jRequest.talkItemTitle == "undefined" ||
-    jRequest.talkItemTitle === '') {
+  if (!jRequest.talkItemTitle) {
     jResponse.error_code = -2;
     jResponse.error_message = `the title field value is missing.`;
     console.log(jResponse.error_message);
     return jResponse;
   }
 
-  if (typeof jRequest.talkItemContent == "undefined" ||
-    jRequest.talkItemContent == "undefined" ||
-    jRequest.talkItemContent === '') {
+  if (!jRequest.talkItemContent) {
     jResponse.error_code = -2;
     jResponse.error_message = `the content field value is missing.`;
     console.log(jResponse.error_message);
     return jResponse;
   }
 
-  if (typeof jRequest.talkId == "undefined" ||
-    jRequest.talkId == "undefined" ||
-    jRequest.talkId === '') {
+  if (!jRequest.talkId) {
     jResponse.error_code = -2;
     jResponse.error_message = `the talkId field value is missing.`;
     console.log(jResponse.error_message);
@@ -250,15 +240,13 @@ const getUserTalks = async (promisePool, req, jRequest) => {
 
   console.log(`session info ${JSON.stringify(req.session)}`);
 
-  if (typeof jRequest.systemCode == "undefined" || jRequest.systemCode === '') {
+  if (!jRequest.systemCode) {
     jResponse.error_code = -2;
     jResponse.error_message = `the systemCode field value is missing.`;
     return jResponse;
   }
 
-  if (typeof jRequest.userId == "undefined" ||
-    jRequest.userId == "undefined" ||
-    jRequest.userId === '') {
+  if (!jRequest.userId) {
     await database.querySQL(promisePool,
       TB_COR_TALK_MST.select_TB_COR_TALK_MST_01,
       [
@@ -322,25 +310,19 @@ const createTalk = async (promisePool, req, jRequest) => {
 
   console.log(`session info ${JSON.stringify(req.session)}`);
 
-  if (typeof jRequest.systemCode == "undefined" ||
-    jRequest.systemCode == "undefined" ||
-    jRequest.systemCode === '') {
+  if (!jRequest.systemCode) {
     jResponse.error_code = -2;
     jResponse.error_message = `the systemCode field value is missing.`;
     return jResponse;
   }
 
-  if (typeof jRequest.userId == "undefined" ||
-    jRequest.userId == "undefined" ||
-    jRequest.userId === '') {
+  if (!jRequest.userId) {
     jResponse.error_code = -2;
     jResponse.error_message = `the userId field value is missing.`;
     return jResponse;
   }
 
-  if (typeof jRequest.talkName == "undefined" ||
-    jRequest.talkName === '' ||
-    jRequest.talkName == "undefined") {
+  if (!jRequest.talkName) {
     jResponse.error_code = -2;
     jResponse.error_message = `the talkName field value is missing.`;
     return jResponse;
