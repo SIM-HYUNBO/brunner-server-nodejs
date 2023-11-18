@@ -101,10 +101,10 @@ const executeService = async (method, req) => {
   console.log(`${method} request: ${JSON.stringify(jRequest)} from ${remoteIp}`);
 
   if (commandName.startsWith('security.')) {
-    jResponse = await security(req, jRequest);
+    jResponse = await new security(req, jRequest);
   }
   else if (commandName.startsWith('talk.')) {
-    jResponse = await talk(req, jRequest);
+    jResponse = await new talk(req, jRequest);
   }
   else {
     jResponse = JSON.stringify(
