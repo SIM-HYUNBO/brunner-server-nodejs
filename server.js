@@ -8,7 +8,7 @@ import session from 'express-session'
 import cors from 'cors'
 import rateLimit from 'express-rate-limit'
 
-// server's modules.
+// server modules.
 import security from './components/security'
 import talk from './components/talk'
 
