@@ -107,11 +107,10 @@ const executeService = async (method, req) => {
     jResponse = await new talk(req, jRequest);
   }
   else {
-    jResponse = JSON.stringify(
-      {
-        error_code: -1,
-        error_message: `[${commandName}] not supported function`
-      })
+    jResponse = JSON.stringify({
+      error_code: -1,
+      error_message: `[${commandName}] not supported function`
+    })
   }
 
   console.log(`reply: ${JSON.stringify(jResponse)}`);
