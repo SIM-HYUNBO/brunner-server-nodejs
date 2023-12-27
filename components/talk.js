@@ -1,5 +1,6 @@
 `use strict`
 
+import logger from "./../winston/Logger"
 import * as database from './database/database'
 import * as TB_COR_TALK_ITEM_MST from './database/sqls/TB_COR_TALK_ITEM_MST'
 import * as TB_COR_USER_MST from './database/sqls/TB_COR_USER_MST'
@@ -34,7 +35,7 @@ export default function executeService(req, jRequest) {
         break;
     }
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   } finally {
     return jResponse;
   }
@@ -47,7 +48,7 @@ const getTalkItems = async (promisePool, req, jRequest) => {
   jResponse.userId = jRequest.userId;
   jResponse.password = jRequest.password;
 
-  console.log(`session info ${JSON.stringify(req.session)}`);
+  logger.info(`session info ${JSON.stringify(req.session)}`);
 
   if (!jRequest.systemCode) {
     jResponse.error_code = -2;
@@ -82,7 +83,7 @@ const getTalkItems = async (promisePool, req, jRequest) => {
       jRequest.lastTalkItemId,
       jRequest.pageSize,
     ]).then((result) => {
-      console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
+      logger.info(`RESULT:\n${JSON.stringify(result[0])}`);
       jResponse.error_code = 0;
       jResponse.error_message = ``;
       jResponse.result = result[0];
@@ -90,7 +91,7 @@ const getTalkItems = async (promisePool, req, jRequest) => {
       jResponse.error_code = -3; // exception
       jResponse.error_message = e;
     }).finally(() => {
-      // console.log(jResponse);
+      // logger.info(jResponse);
     });
 
   return jResponse;
@@ -102,7 +103,7 @@ const createTalkItem = async (promisePool, req, jRequest) => {
   jResponse.commanaName = jRequest.commandName;
   jResponse.userId = jRequest.talkItemUserId;
 
-  console.log(`session info ${JSON.stringify(req.session)}`);
+  logger.info(`session info ${JSON.stringify(req.session)}`);
 
   if (!jRequest.systemCode) {
     jResponse.error_code = -2;
@@ -130,9 +131,9 @@ const createTalkItem = async (promisePool, req, jRequest) => {
   }
 
   const talkItemId = (new Date()).toISOString().replace(/[^0-9]/g, '').slice(0, -3) + '_' + jRequest.talkItemUserId;
-  // console.log();
+  // logger.info();
   // const content = jRequest.content.join("\n");
-  // console.log(content);
+  // logger.info(content);
   await database.executeSQL(promisePool,
     TB_COR_TALK_ITEM_MST.insert_TB_COR_TALK_ITEM_MST_01,
     [
@@ -143,7 +144,7 @@ const createTalkItem = async (promisePool, req, jRequest) => {
       JSON.stringify(jRequest.talkItemContent),
       jRequest.talkId
     ]).then((result) => {
-      console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
+      logger.info(`RESULT:\n${JSON.stringify(result[0])}`);
       jResponse.error_code = 0;
       jResponse.error_message = ``;
       jResponse.result = result[0];
@@ -151,7 +152,7 @@ const createTalkItem = async (promisePool, req, jRequest) => {
       jResponse.error_code = -3; // exception
       jResponse.error_message = e;
     }).finally(() => {
-      //  console.log(jResponse);
+      //  logger.info(jResponse);
       checkPushNotification(promisePool, jRequest.systemCode, talkItemId);
     });
 
@@ -164,47 +165,47 @@ const editTalkItem = async (promisePool, req, jRequest) => {
   jResponse.commanaName = jRequest.commandName;
   jResponse.userId = jRequest.talkItemUserId;
 
-  console.log(`session info ${JSON.stringify(req.session)}`);
+  logger.info(`session info ${JSON.stringify(req.session)}`);
 
   if (!jRequest.systemCode) {
     jResponse.error_code = -2;
     jResponse.error_message = `the systemCode field value is missing.`;
-    console.log(jResponse.error_message);
+    logger.info(jResponse.error_message);
     return jResponse;
   }
 
   if (!jRequest.talkItemId) {
     jResponse.error_code = -2;
     jResponse.error_message = `the talkId field value is missing.`;
-    console.log(jResponse.error_message);
+    logger.info(jResponse.error_message);
     return jResponse;
   }
 
   if (!jRequest.talkItemTitle) {
     jResponse.error_code = -2;
     jResponse.error_message = `the title field value is missing.`;
-    console.log(jResponse.error_message);
+    logger.info(jResponse.error_message);
     return jResponse;
   }
 
   if (!jRequest.talkItemContent) {
     jResponse.error_code = -2;
     jResponse.error_message = `the content field value is missing.`;
-    console.log(jResponse.error_message);
+    logger.info(jResponse.error_message);
     return jResponse;
   }
 
   if (!jRequest.talkId) {
     jResponse.error_code = -2;
     jResponse.error_message = `the talkId field value is missing.`;
-    console.log(jResponse.error_message);
+    logger.info(jResponse.error_message);
     return jResponse;
   }
 
   if (jRequest.talkItemId.endsWith(`_${jRequest.talkItemUserId}`) == false) {
     jResponse.error_code = -4;
     jResponse.error_message = "Editing this talk is not permitted.";
-    console.log(jResponse.error_message);
+    logger.info(jResponse.error_message);
     return;
   }
 
@@ -216,7 +217,7 @@ const editTalkItem = async (promisePool, req, jRequest) => {
       jRequest.systemCode,
       jRequest.talkItemId
     ]).then((result) => {
-      console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
+      logger.info(`RESULT:\n${JSON.stringify(result[0])}`);
       jResponse.error_code = 0;
       jResponse.error_message = ``;
       jResponse.result = result[0];
@@ -224,7 +225,7 @@ const editTalkItem = async (promisePool, req, jRequest) => {
       jResponse.error_code = -3; // exception
       jResponse.error_message = e;
     }).finally(() => {
-      //  console.log(jResponse);
+      //  logger.info(jResponse);
       checkPushNotification(promisePool, jRequest.systemCode, jRequest.talkItemId);
     });
 
@@ -238,7 +239,7 @@ const getUserTalks = async (promisePool, req, jRequest) => {
   jResponse.userId = jRequest.userId;
   jResponse.password = jRequest.password;
 
-  console.log(`session info ${JSON.stringify(req.session)}`);
+  logger.info(`session info ${JSON.stringify(req.session)}`);
 
   if (!jRequest.systemCode) {
     jResponse.error_code = -2;
@@ -252,7 +253,7 @@ const getUserTalks = async (promisePool, req, jRequest) => {
       [
         jRequest.systemCode
       ]).then((result) => {
-        console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
+        logger.info(`RESULT:\n${JSON.stringify(result[0])}`);
         jResponse.error_code = 0;
         jResponse.error_message = ``;
         jResponse.others_talks = result[0];
@@ -261,7 +262,7 @@ const getUserTalks = async (promisePool, req, jRequest) => {
         jResponse.error_code = -3; // exception
         jResponse.error_message = e;
       }).finally(() => {
-        // console.log(jResponse);
+        // logger.info(jResponse);
       });
   } else {
     await database.querySQL(promisePool,
@@ -270,7 +271,7 @@ const getUserTalks = async (promisePool, req, jRequest) => {
         jRequest.systemCode,
         jRequest.userId + '_%'
       ]).then((result) => {
-        console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
+        logger.info(`RESULT:\n${JSON.stringify(result[0])}`);
         jResponse.error_code = 0;
         jResponse.error_message = ``;
         jResponse.users_talks = result[0];
@@ -278,7 +279,7 @@ const getUserTalks = async (promisePool, req, jRequest) => {
         jResponse.error_code = -3; // exception
         jResponse.error_message = e;
       }).finally(() => {
-        // console.log(jResponse);
+        // logger.info(jResponse);
       });
 
     await database.querySQL(promisePool,
@@ -287,7 +288,7 @@ const getUserTalks = async (promisePool, req, jRequest) => {
         jRequest.systemCode,
         jRequest.userId + '_%'
       ]).then((result) => {
-        console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
+        logger.info(`RESULT:\n${JSON.stringify(result[0])}`);
         jResponse.error_code = 0;
         jResponse.error_message = ``;
         jResponse.others_talks = result[0];
@@ -295,7 +296,7 @@ const getUserTalks = async (promisePool, req, jRequest) => {
         jResponse.error_code = -3; // exception
         jResponse.error_message = e;
       }).finally(() => {
-        // console.log(jResponse);
+        // logger.info(jResponse);
       });
   }
 
@@ -308,7 +309,7 @@ const createTalk = async (promisePool, req, jRequest) => {
   jResponse.commanaName = jRequest.commandName;
   jResponse.userId = jRequest.userId;
 
-  console.log(`session info ${JSON.stringify(req.session)}`);
+  logger.info(`session info ${JSON.stringify(req.session)}`);
 
   if (!jRequest.systemCode) {
     jResponse.error_code = -2;
@@ -336,7 +337,7 @@ const createTalk = async (promisePool, req, jRequest) => {
       jRequest.talkName,
       jRequest.userId
     ]).then((result) => {
-      console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
+      logger.info(`RESULT:\n${JSON.stringify(result[0])}`);
       jResponse.error_code = 0;
       jResponse.error_message = ``;
       jResponse.result = result[0];
@@ -344,7 +345,7 @@ const createTalk = async (promisePool, req, jRequest) => {
       jResponse.error_code = -3; // exception
       jResponse.error_message = e;
     }).finally(() => {
-      //  console.log(jResponse);
+      //  logger.info(jResponse);
     });
 
   return jResponse;
@@ -374,7 +375,7 @@ const getToUserIds = async (promisePool, systemCode, talkItemId) => {
       talkItemId
     ]);
   if (result[0].length >= 0) {
-    // console.log(`${result[0].PASSWORD},${jRequest.password}`)
+    // logger.info(`${result[0].PASSWORD},${jRequest.password}`)
     let newArr = result[0].map(function add(item) {
       return item.TO_USER_ID;
     });

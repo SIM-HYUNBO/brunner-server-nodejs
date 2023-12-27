@@ -1,11 +1,11 @@
 `use strict`
 import * as mysql from 'mysql2'
+import logger from "./../../winston/Logger"
 
 let pool = undefined;
 
 export const getPool = () => {
-  console.log(`mysql pool info
-  ---------------------------------
+  logger.info(`mysql pool info
   host     : ${process.env.DATABASE_SERVER_IP},
   user     : ${process.env.DATABASE_USER_NAME},
   password : ${process.env.DATABASE_PASSWORD},
@@ -24,10 +24,8 @@ export const getPool = () => {
 
 export const querySQL = async (promisePool, sql, params) => {
   try {
-    console.log(`
-==================================================
+    logger.info(`
 SQL:\n${sql}
---------------------------------------------------
 PARAMS:
     ${JSON.stringify(params)}`)
 
@@ -35,17 +33,15 @@ PARAMS:
     return result;
   }
   catch (err) {
-    console.log(err);
+    logger.error(err);
     return err;
   }
 };
 
 export const executeSQL = async (promisePool, sql, params) => {
   try {
-    console.log(`
-==================================================
+    logger.info(`
 SQL:\n${sql}\n
---------------------------------------------------
 PARAMS:\n
     ${JSON.stringify(params)}`)
 
@@ -53,7 +49,7 @@ PARAMS:\n
     return result;
   }
   catch (err) {
-    console.log(err);
+    logger.error(err);
     return err;
   }
 };

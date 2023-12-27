@@ -1,0 +1,2 @@
+2023-12-27 21:00:10.759 error: Bind parameters must not contain undefined. To pass SQL NULL specify JS null
+2023-12-27 21:01:14.557 error: Bind parameters must not contain undefined. To pass SQL NULL specify JS null

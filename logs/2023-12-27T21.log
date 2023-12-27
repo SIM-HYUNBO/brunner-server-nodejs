@@ -1,0 +1,104 @@
+2023-12-27 21:00:10.597 info: START TXN:7086,657502500
+
+2023-12-27 21:00:10.620 info: POST request: {"commandName":"security.signin","userId":"root","password":"admin"} from 192.168.219.1
+2023-12-27 21:00:10.625 info: mysql pool info
+  host     : 112.156.201.62,
+  user     : root,
+  password : hbSim@6575,
+  database : brunner
+2023-12-27 21:00:10.635 info: session info {"cookie":{"originalMaxAge":null,"expires":null,"secure":true,"httpOnly":true,"path":"/"}}
+2023-12-27 21:00:10.637 info: session에 로그인 정보가 없음.
+2023-12-27 21:00:10.639 info: 
+SQL:
+SELECT SYSTEM_CODE, USER_ID, PASSWORD, USER_NAME
+  FROM BRUNNER.TB_COR_USER_MST
+ WHERE USER_ID = ?
+ 
+PARAMS:
+    ["root"]
+2023-12-27 21:00:10.645 info: session info {"cookie":{"originalMaxAge":null,"expires":null,"secure":true,"httpOnly":true,"path":"/"}}
+2023-12-27 21:00:10.650 info: 
+SQL:
+UPDATE BRUNNER.TB_COR_USER_MST 
+     SET USER_TOKEN = ?
+   WHERE USER_ID = ?
+   
+
+PARAMS:
+
+    [null,"root"]
+2023-12-27 21:00:10.702 info: RESULT:
+[{"SYSTEM_CODE":"00","USER_ID":"root","PASSWORD":"admin","USER_NAME":"어드민"}]
+2023-12-27 21:00:10.726 info: session에 사용자 정보 설정함.
+2023-12-27 21:00:10.731 info: session info {"cookie":{"originalMaxAge":null,"expires":null,"secure":true,"httpOnly":true,"path":"/"},"userInfo":{"SYSTEM_CODE":"00","USER_ID":"root","PASSWORD":"*","USER_NAME":"어드민"}}
+2023-12-27 21:00:10.759 error: Bind parameters must not contain undefined. To pass SQL NULL specify JS null
+2023-12-27 21:00:10.789 info: RESULT:
+undefined
+2023-12-27 21:00:10.793 info: reply: {"commanaName":"security.signin","userId":"root","error_code":-2,"error_message":{}}
+2023-12-27 21:00:10.800 info: 
+END TXN:7086,657502500
+2023-12-27 21:00:47.342 info: START TXN:7123,402660600
+
+2023-12-27 21:00:47.345 info: POST request: {"commandName":"security.signin","userId":"root","password":"admin"} from 192.168.219.1
+2023-12-27 21:00:47.347 info: mysql pool info
+  host     : 112.156.201.62,
+  user     : root,
+  password : hbSim@6575,
+  database : brunner
+2023-12-27 21:00:47.350 info: session info {"cookie":{"originalMaxAge":null,"expires":null,"secure":true,"httpOnly":true,"path":"/"}}
+2023-12-27 21:00:47.353 info: session에 로그인 정보가 없음.
+2023-12-27 21:00:47.356 info: 
+SQL:
+SELECT SYSTEM_CODE, USER_ID, PASSWORD, USER_NAME
+  FROM BRUNNER.TB_COR_USER_MST
+ WHERE USER_ID = ?
+ 
+PARAMS:
+    ["root"]
+2023-12-27 21:01:03.792 info: session info {"cookie":{"originalMaxAge":null,"expires":null,"secure":true,"httpOnly":true,"path":"/"}}
+2023-12-27 21:01:05.760 info: 
+SQL:
+UPDATE BRUNNER.TB_COR_USER_MST 
+     SET USER_TOKEN = ?
+   WHERE USER_ID = ?
+   
+
+PARAMS:
+
+    [null,"root"]
+2023-12-27 21:01:14.557 error: Bind parameters must not contain undefined. To pass SQL NULL specify JS null
+2023-12-27 21:01:14.561 info: RESULT:
+undefined
+2023-12-27 21:01:14.595 info: reply: {"commanaName":"security.signin","userId":"root","error_code":-2,"error_message":{}}
+2023-12-27 21:01:14.601 info: 
+END TXN:7123,402660600
+2023-12-27 21:01:14.611 info: RESULT:
+[{"SYSTEM_CODE":"00","USER_ID":"root","PASSWORD":"admin","USER_NAME":"어드민"}]
+2023-12-27 21:01:14.641 info: session에 사용자 정보 설정함.
+2023-12-27 21:01:14.664 info: session info {"cookie":{"originalMaxAge":null,"expires":null,"secure":true,"httpOnly":true,"path":"/"},"userInfo":{"SYSTEM_CODE":"00","USER_ID":"root","PASSWORD":"*","USER_NAME":"어드민"}}
+2023-12-27 21:02:35.006 info: > Ready on https://0.0.0.0:8443
+2023-12-27 21:02:38.231 info: START TXN:7234,291388400
+
+2023-12-27 21:02:38.287 info: POST request: {"commandName":"security.signin","userId":"root","password":"admin"} from 192.168.219.1
+2023-12-27 21:02:38.331 info: mysql pool info
+  host     : 112.156.201.62,
+  user     : root,
+  password : hbSim@6575,
+  database : brunner
+2023-12-27 21:02:38.387 info: session info {"cookie":{"originalMaxAge":null,"expires":null,"secure":true,"httpOnly":true,"path":"/"}}
+2023-12-27 21:02:38.394 info: session에 로그인 정보가 없음.
+2023-12-27 21:02:38.483 info: 
+SQL:
+SELECT SYSTEM_CODE, USER_ID, PASSWORD, USER_NAME
+  FROM BRUNNER.TB_COR_USER_MST
+ WHERE USER_ID = ?
+ 
+PARAMS:
+    ["root"]
+2023-12-27 21:02:38.753 info: RESULT:
+[{"SYSTEM_CODE":"00","USER_ID":"root","PASSWORD":"admin","USER_NAME":"어드민"}]
+2023-12-27 21:02:38.757 info: reply: {"commanaName":"security.signin","userId":"root","password":"admin","error_code":0,"error_message":"ok","userInfo":{"SYSTEM_CODE":"00","USER_ID":"root","PASSWORD":"*","USER_NAME":"어드민"}}
+2023-12-27 21:02:38.768 info: 
+END TXN:7234,291388400
+2023-12-27 21:02:38.772 info: session에 사용자 정보 설정함.
+2023-12-27 21:02:38.773 info: session info {"cookie":{"originalMaxAge":null,"expires":null,"secure":true,"httpOnly":true,"path":"/"},"userInfo":{"SYSTEM_CODE":"00","USER_ID":"root","PASSWORD":"*","USER_NAME":"어드민"}}

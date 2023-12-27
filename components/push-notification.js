@@ -1,5 +1,5 @@
 `use strict`
-
+import logger from "./../winston/Logger"
 import * as database from './database/database'
 import admin from "firebase-admin";
 import serviceAccount from "./notification/brunner-push-7e0ef-firebase-adminsdk-ptyec-3892a26b45.json";
@@ -28,10 +28,10 @@ export default async function createPushNotification(promisePool, jPushItem) {
                 systemCode,
                 fromSource
             ]).then((result) => {
-                console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
+                logger.log(`RESULT:\n${JSON.stringify(result[0])}`);
                 pushMessage(promisePool, toUserIds, 'title', 'body', 'topic');
             }).catch((e) => {
-                console.log(e)
+                logger.error(e)
             }).finally(() => {
                 //  console.log(jResponse);
             });
@@ -61,7 +61,7 @@ const pushMessage = async (promisePool, toUserIds, title, body, topic) => {
             toUserIds
         ]);
 
-    console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
+    logger.info(`RESULT:\n${JSON.stringify(result[0])}`);
 
     userTokens = result[0].map((token) => {
         return token.USER_TOKEN ? token.USER_TOKEN : '';
@@ -80,9 +80,9 @@ const pushMessage = async (promisePool, toUserIds, title, body, topic) => {
 
         messaging.send(payload)
             .then((result) => {
-                console.log(result)
+                logger.info(result)
             }).catch((e) => {
-                console.log(e)
+                logger.error(e)
             }).finally(() => {
                 //  console.log(jResponse);
             });

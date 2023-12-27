@@ -1,5 +1,6 @@
 `use strict`
 
+import logger from "./../winston/Logger"
 import * as database from './database/database'
 import * as TB_COR_USER_MST from './database/sqls/TB_COR_USER_MST'
 
@@ -29,7 +30,7 @@ export default function executeService(req, jRequest) {
         break;
     }
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   } finally {
     return jResponse;
   }
@@ -42,10 +43,10 @@ const signup = async (promisePool, req, jRequest) => {
   jResponse.userId = jRequest.userId;
   jResponse.password = jRequest.password;
 
-  console.log(`session 사용자 정보 확인. ${JSON.stringify(req.session.userInfo)}`);
+  logger.info(`session 사용자 정보 확인. ${JSON.stringify(req.session.userInfo)}`);
 
   if (req.session.userInfo && req.session.userInfo.userId) {
-    console.log(`session에 이미 사용자 로그인 정보가 있음. ${JSON.stringify(req.session.userInfo)}`);
+    logger.info(`session에 이미 사용자 로그인 정보가 있음. ${JSON.stringify(req.session.userInfo)}`);
     jResponse.userInfo = req.session.userInfo;
 
     jResponse.error_code = -1; // already a user signined
@@ -119,7 +120,7 @@ const signup = async (promisePool, req, jRequest) => {
       [
         jRequest.userId
       ]).then((result) => {
-        console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
+        logger.info(`RESULT:\n${JSON.stringify(result[0])}`);
 
         if (result[0].length > 0) {
           jResponse.error_code = -1;
@@ -134,7 +135,7 @@ const signup = async (promisePool, req, jRequest) => {
         jResponse.error_code = -3; // exception
         jResponse.error_message = e;
       }).finally(() => {
-        // console.log(jResponse);
+        // logger.info(jResponse);
       });
 
     if (jResponse.error_code < 0) {
@@ -155,7 +156,7 @@ const signup = async (promisePool, req, jRequest) => {
         'Y',
         process.env.SYSTEM_USER_ID
       ]).then((result) => {
-        console.log(`==========================\nRESULT:\n${result}`);
+        logger.info(`RESULT:\n${result}`);
         if (result[0].affectedRows == 1) {
           jResponse.error_code = 0;
           jResponse.error_message = `ok`;
@@ -165,11 +166,11 @@ const signup = async (promisePool, req, jRequest) => {
           jResponse.error_message = `database failed.`;
         }
       }).catch((e) => {
-        console.log(`==========================\nCATCH:\n${e}`);
+        logger.info(`CATCH:\n${e}`);
         jResponse.error_code = -3; // exception
         jResponse.error_message = e;
       }).finally(() => {
-        // console.log(jResponse);
+        // logger.info(jResponse);
       });
   }
 
@@ -183,22 +184,22 @@ const signin = async (promisePool, req, jRequest) => {
   jResponse.userId = jRequest.userId;
   jResponse.password = jRequest.password;
 
-  console.log(`session info ${JSON.stringify(req.session)}`);
+  logger.info(`session info ${JSON.stringify(req.session)}`);
 
   if (req.session && req.session.userInfo) {
-    console.log(`session에 이미 로그인 정보가 있음. ${JSON.stringify(req.session.userInfo)}`);
+    logger.info(`session에 이미 로그인 정보가 있음. ${JSON.stringify(req.session.userInfo)}`);
     jResponse.userInfo = req.session.userInfo;
   } else {
-    console.log(`session에 로그인 정보가 없음.`);
+    logger.info(`session에 로그인 정보가 없음.`);
 
     await database.querySQL(promisePool,
       TB_COR_USER_MST.select_TB_COR_USER_MST_01,
       [
         jRequest.userId
       ]).then((result) => {
-        console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
+        logger.info(`RESULT:\n${JSON.stringify(result[0])}`);
         if (result[0].length == 1) {
-          // console.log(`${result[0].PASSWORD},${jRequest.password}`)
+          // logger.info(`${result[0].PASSWORD},${jRequest.password}`)
           if (result[0][0].PASSWORD === jRequest.password) {
             jResponse.error_code = 0;
             jResponse.error_message = `ok`;
@@ -206,8 +207,8 @@ const signin = async (promisePool, req, jRequest) => {
             jResponse.userInfo.PASSWORD = '*';
             req.session.userInfo = jResponse.userInfo;
             req.session.save(() => {
-              console.log(`session에 사용자 정보 설정함.`);
-              console.log(`session info ${JSON.stringify(req.session)}`);
+              logger.info(`session에 사용자 정보 설정함.`);
+              logger.info(`session info ${JSON.stringify(req.session)}`);
             });
           } else {
             jResponse.error_code = -1; // incorrect password 
@@ -221,7 +222,7 @@ const signin = async (promisePool, req, jRequest) => {
         jResponse.error_code = -3; // exception
         jResponse.error_message = e;
       }).finally(() => {
-        // console.log(jResponse);
+        // logger.info(jResponse);
       });
   }
 
@@ -234,7 +235,7 @@ const updateUserToken = async (promisePool, req, jRequest) => {
   jResponse.commanaName = jRequest.commandName;
   jResponse.userId = jRequest.userId;
 
-  console.log(`session info ${JSON.stringify(req.session)}`);
+  logger.info(`session info ${JSON.stringify(req.session)}`);
 
 
   await database.executeSQL(promisePool,
@@ -243,7 +244,7 @@ const updateUserToken = async (promisePool, req, jRequest) => {
       jRequest.userToken,
       jRequest.userId
     ]).then((result) => {
-      console.log(`==========================\nRESULT:\n${JSON.stringify(result[0])}`);
+      logger.info(`RESULT:\n${JSON.stringify(result[0])}`);
       if (result[0].affectedRows == 1) {
         jResponse = result[0];
         jResponse.error_code = 0;
@@ -256,7 +257,7 @@ const updateUserToken = async (promisePool, req, jRequest) => {
       jResponse.error_code = -2; // exception
       jResponse.error_message = e;
     }).finally(() => {
-      // console.log(jResponse);
+      // logger.info(jResponse);
     });
 
   return jResponse;
@@ -310,7 +311,7 @@ const resetPassword = async (promisePool, req, jRequest) => {
       jRequest.phoneNumber,
       jRequest.newPassword
     ]).then((result) => {
-      console.log(`==========================\nRESULT:\n${result}`);
+      logger.info(`RESULT:\n${result}`);
 
       if (result[0].affectedRows == 1) {
         jResponse = result[0];
@@ -319,11 +320,11 @@ const resetPassword = async (promisePool, req, jRequest) => {
         jResponse.error_message = `database error occured.`;
       }
     }).catch((e) => {
-      console.log(`${e}`);
+      logger.info(`${e}`);
       jResponse.error_code = -3; // exception
       jResponse.error_message = e;
     }).finally(() => {
-      // console.log(jResponse);
+      // logger.info(jResponse);
     });
 
   return jResponse;
@@ -339,8 +340,8 @@ const signout = (promisePool, req, jRequest) => {
   jResponse.error_message = `ok`;
   req.session.userInfo = {};
   req.session.save(() => {
-    console.log(`session에 사용자 정보 삭제함.`);
-    console.log(`session info ${JSON.stringify(req.session)}`);
+    logger.info(`session에 사용자 정보 삭제함.`);
+    logger.info(`session info ${JSON.stringify(req.session)}`);
   });
 
   return jResponse;

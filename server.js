@@ -7,6 +7,7 @@ import dotenv from 'dotenv'
 import session from 'express-session'
 import cors from 'cors'
 import rateLimit from 'express-rate-limit'
+import logger from "./winston/Logger"
 
 // server modules.
 import security from './components/security'
@@ -45,7 +46,7 @@ const serverPort = process.env.BACKEND_SERVER_PORT;
 if (process.env.BACKEND_SERVER_PROTOCOL === 'http') {
   server.listen(serverPort, serverIp, (err) => {
     if (err) throw err;
-    console.log(`> Ready on http://${serverIp}:${serverPort}`);
+    logger.info(`> Ready on http://${serverIp}:${serverPort}`);
   });
 }
 else if (process.env.BACKEND_SERVER_PROTOCOL === 'https') {
@@ -56,16 +57,16 @@ else if (process.env.BACKEND_SERVER_PROTOCOL === 'https') {
 
   httpsServer.listen(serverPort, serverIp, (err) => {
     if (err) throw err;
-    console.log(`> Ready on https://${serverIp}:${serverPort}`);
+    logger.info(`> Ready on https://${serverIp}:${serverPort}`);
   });
 }
 
 server.get('/executeJson', async (req, res) => {
   let txnTime = process.hrtime()
-  console.log(`\n>>>>>>>>>>\nSTART TXN:${txnTime}\n`)
+  logger.info(`START TXN:${txnTime}\n`)
   var jResponse = null;
   try {
-    console.log(`GET data:${req}`);
+    logger.info(`GET data:${req}`);
     jResponse = await executeService("GET", req);
   }
   catch (e) {
@@ -73,13 +74,13 @@ server.get('/executeJson', async (req, res) => {
   }
   finally {
     res.send(`${JSON.stringify(jResponse)}`);
-    console.log(`\nEND TXN:${txnTime}\n<<<<<<<<<<<<<<<<<<<<<<<<<\n`)
+    logger.info(`\nEND TXN:${txnTime}`)
   }
 });
 
 server.post('/executeJson', async (req, res) => {
   let txnTime = process.hrtime()
-  console.log(`\n>>>>>>>>>>>>>>>>>>>>>>>>>\nSTART TXN:${txnTime}\n`)
+  logger.info(`START TXN:${txnTime}\n`)
   var jResponse = null;
   try {
     jResponse = await executeService("POST", req);
@@ -89,7 +90,7 @@ server.post('/executeJson', async (req, res) => {
   }
   finally {
     res.send(`${JSON.stringify(jResponse)}`);
-    console.log(`\nEND TXN:${txnTime}\n<<<<<<<<<<<<<<<<<<<<<<<<<\n`)
+    logger.info(`\nEND TXN:${txnTime}`)
   }
 });
 
@@ -98,7 +99,7 @@ const executeService = async (method, req) => {
   var jResponse = null;
   const commandName = jRequest.commandName;
   var remoteIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-  console.log(`${method} request: ${JSON.stringify(jRequest)} from ${remoteIp}`);
+  logger.info(`${method} request: ${JSON.stringify(jRequest)} from ${remoteIp}`);
 
   if (commandName.startsWith('security.')) {
     jResponse = await new security(req, jRequest);
@@ -113,6 +114,6 @@ const executeService = async (method, req) => {
     })
   }
 
-  console.log(`reply: ${JSON.stringify(jResponse)}`);
+  logger.info(`reply: ${JSON.stringify(jResponse)}`);
   return jResponse;
 }

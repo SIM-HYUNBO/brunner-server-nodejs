@@ -1,0 +1,15 @@
+2023-12-27 19:31:00.641 error: Bind parameters must not contain undefined. To pass SQL NULL specify JS null
+2023-12-27 19:31:41.246 error: Bind parameters must not contain undefined. To pass SQL NULL specify JS null
+2023-12-27 19:32:50.642 error: Bind parameters must not contain undefined. To pass SQL NULL specify JS null
+2023-12-27 19:35:09.952 error: Bind parameters must not contain undefined. To pass SQL NULL specify JS null
+2023-12-27 19:40:09.430 error: Bind parameters must not contain undefined. To pass SQL NULL specify JS null
+2023-12-27 19:40:29.063 error: Bind parameters must not contain undefined. To pass SQL NULL specify JS null
+2023-12-27 19:43:45.716 error: Bind parameters must not contain undefined. To pass SQL NULL specify JS null
+2023-12-27 19:44:52.802 error: Bind parameters must not contain undefined. To pass SQL NULL specify JS null
+2023-12-27 19:51:20.237 error: Bind parameters must not contain undefined. To pass SQL NULL specify JS null
+2023-12-27 19:52:26.495 error: Bind parameters must not contain undefined. To pass SQL NULL specify JS null
+2023-12-27 19:52:38.043 error: Bind parameters must not contain undefined. To pass SQL NULL specify JS null
+2023-12-27 19:53:05.725 error: Bind parameters must not contain undefined. To pass SQL NULL specify JS null
+2023-12-27 19:58:15.819 error: connect ETIMEDOUT
+2023-12-27 19:58:16.032 error: Bind parameters must not contain undefined. To pass SQL NULL specify JS null
+2023-12-27 19:59:45.935 error: Bind parameters must not contain undefined. To pass SQL NULL specify JS null

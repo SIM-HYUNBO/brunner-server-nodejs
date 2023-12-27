@@ -1,0 +1,72 @@
+2023-12-25 21:11:01.416 info: > Ready on https://0.0.0.0:8443
+2023-12-25 21:11:33.237 info: 
+>>>>>>>>>>>>>>>>>>>>>>>>>
+START TXN:15600,297381800
+
+2023-12-25 21:11:33.329 info: POST request: {"commandName":"talk.getUserTalks","systemCode":"00","userId":""} from 192.168.219.1
+2023-12-25 21:11:33.562 info: reply: {"commanaName":"talk.getUserTalks","userId":"","error_code":0,"error_message":"","others_talks":[{"SYSTEM_CODE":"00","TALK_ID":"root_대륙의 실수 급 가성비 제품 추천","TALK_NAME":"대륙의 실수 급 가성비 제품 추천","CREATE_USER_ID":"root"},{"SYSTEM_CODE":"00","TALK_ID":"root_다이소에서 가성비 좋은 상품 추천","TALK_NAME":"다이소에서 가성비 좋은 상품 추천","CREATE_USER_ID":"root"}],"users_talks":[]}
+2023-12-25 21:11:33.573 info: 
+END TXN:15600,297381800
+<<<<<<<<<<<<<<<<<<<<<<<<<
+
+2023-12-25 21:12:28.902 info: 
+>>>>>>>>>>>>>>>>>>>>>>>>>
+START TXN:15655,962625900
+
+2023-12-25 21:12:28.906 info: POST request: {"commandName":"security.signin","userId":"root","password":"admin"} from 192.168.219.1
+2023-12-25 21:12:28.930 info: reply: {"commanaName":"security.signin","userId":"root","password":"admin","error_code":0,"error_message":"ok","userInfo":{"SYSTEM_CODE":"00","USER_ID":"root","PASSWORD":"*","USER_NAME":"어드민"}}
+2023-12-25 21:12:28.935 info: 
+END TXN:15655,962625900
+<<<<<<<<<<<<<<<<<<<<<<<<<
+
+2023-12-25 21:37:47.295 info: > Ready on https://0.0.0.0:8443
+2023-12-25 21:38:25.848 info: 
+>>>>>>>>>>>>>>>>>>>>>>>>>
+START TXN:17212,909248100
+
+2023-12-25 21:38:25.853 info: POST request: {"commandName":"security.signin","userId":"root","password":"admin"} from 192.168.219.1
+2023-12-25 21:38:25.865 info: mysql pool info
+  ---------------------------------
+  host     : 112.156.201.62,
+  user     : root,
+  password : hbSim@6575,
+  database : brunner
+2023-12-25 21:38:25.883 info: session info {"cookie":{"originalMaxAge":null,"expires":null,"secure":true,"httpOnly":true,"path":"/"}}
+2023-12-25 21:38:25.891 info: session에 로그인 정보가 없음.
+2023-12-25 21:38:25.897 info: 
+==================================================
+SQL:
+SELECT SYSTEM_CODE, USER_ID, PASSWORD, USER_NAME
+  FROM BRUNNER.TB_COR_USER_MST
+ WHERE USER_ID = ?
+ 
+--------------------------------------------------
+PARAMS:
+    ["root"]
+2023-12-25 21:38:25.911 info: session info {"cookie":{"originalMaxAge":null,"expires":null,"secure":true,"httpOnly":true,"path":"/"}}
+2023-12-25 21:38:25.916 info: 
+==================================================
+SQL:
+UPDATE BRUNNER.TB_COR_USER_MST 
+     SET USER_TOKEN = ?
+   WHERE USER_ID = ?
+   
+
+--------------------------------------------------
+PARAMS:
+
+    [null,"root"]
+2023-12-25 21:38:26.019 error: Bind parameters must not contain undefined. To pass SQL NULL specify JS null
+2023-12-25 21:38:26.022 info: ==========================
+RESULT:
+undefined
+2023-12-25 21:38:26.025 info: reply: {"commanaName":"security.signin","userId":"root","error_code":-2,"error_message":{}}
+2023-12-25 21:38:26.037 info: 
+END TXN:17212,909248100
+<<<<<<<<<<<<<<<<<<<<<<<<<
+
+2023-12-25 21:38:26.054 info: ==========================
+RESULT:
+[{"SYSTEM_CODE":"00","USER_ID":"root","PASSWORD":"admin","USER_NAME":"어드민"}]
+2023-12-25 21:38:26.069 info: session에 사용자 정보 설정함.
+2023-12-25 21:38:26.118 info: session info {"cookie":{"originalMaxAge":null,"expires":null,"secure":true,"httpOnly":true,"path":"/"},"userInfo":{"SYSTEM_CODE":"00","USER_ID":"root","PASSWORD":"*","USER_NAME":"어드민"}}

@@ -1,0 +1,24 @@
+2023-12-25 20:56:48 info: > Ready on https://0.0.0.0:8443
+2023-12-25 20:57:48 info: 
+>>>>>>>>>>>>>>>>>>>>>>>>>
+START TXN:14775,461422000
+
+2023-12-25 20:57:48 info: POST request: {"commandName":"talk.getUserTalks","systemCode":"00","userId":""} from 192.168.219.1
+2023-12-25 20:57:48 info: reply: {"commanaName":"talk.getUserTalks","userId":"","error_code":0,"error_message":"","others_talks":[{"SYSTEM_CODE":"00","TALK_ID":"root_대륙의 실수 급 가성비 제품 추천","TALK_NAME":"대륙의 실수 급 가성비 제품 추천","CREATE_USER_ID":"root"},{"SYSTEM_CODE":"00","TALK_ID":"root_다이소에서 가성비 좋은 상품 추천","TALK_NAME":"다이소에서 가성비 좋은 상품 추천","CREATE_USER_ID":"root"}],"users_talks":[]}
+2023-12-25 20:57:48 info: 
+END TXN:14775,461422000
+<<<<<<<<<<<<<<<<<<<<<<<<<
+
+2023-12-25 20:59:14.fff info: > Ready on https://0.0.0.0:8443
+2023-12-25 20:59:57.fff info: > Ready on https://0.0.0.0:8443
+2023-12-25 21:01:59.963 info: > Ready on https://0.0.0.0:8443
+2023-12-25 21:02:11.792 info: 
+>>>>>>>>>>>>>>>>>>>>>>>>>
+START TXN:15038,852631200
+
+2023-12-25 21:02:11.876 info: POST request: {"commandName":"talk.getUserTalks","systemCode":"00","userId":""} from 192.168.219.1
+2023-12-25 21:02:12.208 info: reply: {"commanaName":"talk.getUserTalks","userId":"","error_code":0,"error_message":"","others_talks":[{"SYSTEM_CODE":"00","TALK_ID":"root_대륙의 실수 급 가성비 제품 추천","TALK_NAME":"대륙의 실수 급 가성비 제품 추천","CREATE_USER_ID":"root"},{"SYSTEM_CODE":"00","TALK_ID":"root_다이소에서 가성비 좋은 상품 추천","TALK_NAME":"다이소에서 가성비 좋은 상품 추천","CREATE_USER_ID":"root"}],"users_talks":[]}
+2023-12-25 21:02:12.223 info: 
+END TXN:15038,852631200
+<<<<<<<<<<<<<<<<<<<<<<<<<
+
